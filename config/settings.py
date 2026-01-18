@@ -113,3 +113,11 @@ ACCOUNT_EMAIL_VERIFICATION = "none" # 이메일 인증 건너뛰기
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
+
+AUTHENTICATION_BACKENDS = [
+    # 1. Django 관리자 페이지나 일반 로그인에 필요
+    'django.contrib.auth.backends.ModelBackend',
+
+    # 2. allauth를 이용한 소셜 로그인에 필요 (이게 핵심!)
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
