@@ -1,0 +1,42 @@
+<!-- 회원가입 페이지 -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}회원가입 - Piro Card Match{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    
+    <div class="auth-box">
+        <h1 class="auth-title">Sign Up</h1>
+        
+        <form method="POST" action="" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="input-group">
+                <label for="id_username">ID</label>
+                <input type="text" name="username" id="id_username">
+            </div>
+
+            <div class="input-group">
+                <label for="id_password">PW</label>
+                <input type="password" name="password" id="id_password">
+            </div>
+            
+            <div class="input-group">
+                <label for="id_password_check">PW Check</label>
+                <input type="password" name="password_check" id="id_password_check">
+            </div>
+
+            <div class="input-group">
+                <label for="id_nickname">Name</label>
+                <input type="text" name="nickname" id="id_nickname">
+            </div>
+
+            <button type="submit" class="btn-submit">회원가입</button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
