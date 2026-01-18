@@ -113,4 +113,10 @@ def counter_attack(request, game_id):
             game.defender.save()
             
         game.save()
-        return redirect('games:game_detail', pk=game.id)
+        return redirect('game_detail', game_id=game.id) # 반격 후 상세 페이지로 
+    
+def login_view(request):
+    return render(request, "users/login.html")
+
+def signup_view(request):
+    return render(request, "users/signup.html")
