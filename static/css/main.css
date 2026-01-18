@@ -1,37 +1,76 @@
-.main-body-hs {
-  width: 100%;
-  min-height: calc(100vh - 80px); /* 메뉴바 높이만큼 빼기 */
-  
-  background-image: url("../images/background.png");
-  background-size: cover;        /* 화면에 꽉 차게 */
-  background-position: center;   /* 중앙 기준 */
-  background-repeat: no-repeat;
+/* =========================================
+   메인 페이지 전용 스타일 (Main Page)
+   ========================================= */
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* 메인 박스 (팀원분의 float-bg-hs 대체) */
+.main-box {
+    background-color: #FFF1B9; /* 팀원분이 원한 진한 노란색 유지 */
+    width: 100%;
+    max-width: 600px; /* 반응형을 위해 max-width 사용 */
+    height: 400px;
+    
+    border-radius: 15px; /* 모서리 둥글게 (auth-box와 통일감) */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* 입체감 그림자 추가 */
+    
+    /* 박스 내부 내용 중앙 정렬 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px; /* 제목과 버튼 사이 간격 */
 }
 
-.main-body-hs .float-bg-hs{
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background-color: #FFF1B9;
-    width: 600px; height: 400px;
-    border-radius: 10px;
+/* 게임 제목 */
+.game-title {
+    font-family: 'NeoDunggeunmo', cursive; /* 폰트 명시 (확실하게) */
+    color: #935555; 
+    font-size: 58px; 
+    font-weight: 900; /* 픽셀폰트는 normal이 깔끔 -> 제미나이 어쩔 시른데? 두껍게 할거임!!! 쌰갈!!!!!! ㅜㅜㅜㅜ ..........................*/
+    text-shadow: 4px 4px 0px rgba(0,0,0,0.1); /* 그림자 살짝 */
+    text-align: center;
+    line-height: 1.2;
 }
 
-.main-body-hs .float-bg-hs .game-title-hs{
-    color: #935555; font-size: 60px; font-weight: 900;
+/* 버튼들을 감싸는 영역 */
+.main-buttons {
+    display: flex;
+    gap: 20px; /* 버튼 사이 간격 */
 }
-.main-body-hs .float-bg-hs .main-buttons-hs{display: flex; flex-wrap: nowrap;}
-.main-body-hs .float-bg-hs .main-buttons-hs .loginbtn-hs{
-    background-color: #935555; 
-    width: 80px; height: 30px; border-radius: 5px; 
-    text-align: center; color: white;
-    display: flex; align-items: center; justify-content: center; padding: 3px; margin: 5px;
+
+/* 메인 페이지 버튼 공통 스타일 */
+.btn-main {
+    width: 120px;       /* 팀원분보다 조금 키움 (터치하기 좋게) */
+    height: 45px;
+    border-radius: 8px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    
+    transition: transform 0.1s, opacity 0.2s;
 }
-.main-body-hs .float-bg-hs .main-buttons-hs .signupbutn-hs{
-    background-color: #7C7C7C; 
-    width: 80px; height: 30px; border-radius: 5px; 
-    text-align: center; color: white;
-    display: flex; align-items: center; justify-content: center; padding: 3px; margin: 5px;
+
+/* 버튼 눌렀을 때 효과 */
+.btn-main:active {
+    transform: scale(0.95);
+}
+
+/* 로그인 버튼 (갈색) */
+.btn-login {
+    background-color: #935555;
+}
+.btn-login:hover {
+    background-color: #7a4444;
+}
+
+/* 회원가입 버튼 (회색) */
+.btn-signup {
+    background-color: #7C7C7C;
+}
+.btn-signup:hover {
+    background-color: #5a5a5a;
 }
