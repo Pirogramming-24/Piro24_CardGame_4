@@ -1,2 +1,7 @@
 /* base.html에 있는 주석 확인해주세요 */
 
+.nav-container {
+  background-color: #935555;
+  height: 150px;
+}
+.nav-container .nav-logo{color: white;}
