@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Piro Card Game{% endblock %}</title>
+    <title>{% block title %}Piro Card Match{% endblock %}</title>
     
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
@@ -21,7 +21,7 @@
                     <a href="{% url 'games:game_attack' %}">게임하기</a>
                     <a href="{% url 'games:ranking' %}">랭킹보기</a>
                     
-                    <a href="#">로그아웃</a> 
+                    <a href="#">로그아웃</a>
                     {% else %}
                     {% endif %}
             </nav>
@@ -33,5 +33,6 @@
         {% endblock %}
     </main>
 
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
