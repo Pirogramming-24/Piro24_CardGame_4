@@ -22,7 +22,7 @@
                     <a href="{% url 'games:game_attack' %}">게임하기</a>
                     <a href="{% url 'games:ranking' %}">랭킹보기</a>
                     
-                    <a href="#">로그아웃</a> <!--아직 링크 미정이라 #으로 해둠 나중에 수정해야함-->
+                    <a href="{% url 'users:logout' %}">로그아웃</a> <!--아직 링크 미정이라 #으로 해둠 나중에 수정해야함. 수정완료!!! -->
                     {% else %}
                     {% endif %}
             </nav>

@@ -1,39 +1,43 @@
 <!-- 로그인 페이지 -->
- 
+
+<!--회원가입 폼 등에서 input 태그의 namge 속성을 임의로 username, password, nickname 등으로 적은거
+views.py에서 받는 변수명이랑 똑같은지 확인해야함-->
+
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title %}로그인 - Piro Card Match{% endblock %}
 
 {% block content %}
-<div class="main-container"> <div class="auth-box"> <h1 class="auth-title">Login</h1>
+<div class="main-container">
+    <div class="auth-box login-box"> <h1 class="auth-title">Login</h1>
         
         <form method="POST" action="" class="auth-form">
             {% csrf_token %}
             
-            <div class="input-group">
-                <label for="id_username">ID</label>
-                <input type="text" name="username" id="id_username" placeholder="아이디를 입력하세요">
+            <div class="input-area">
+                <div class="input-group">
+                    <label for="id_username" class="sr-only">ID</label>
+                    <input type="text" name="username" id="id_username" placeholder="ID">
+                </div>
+
+                <div class="input-group">
+                    <label for="id_password" class="sr-only">PW</label>
+                    <input type="password" name="password" id="id_password" placeholder="PW">
+                </div>
             </div>
 
-            <div class="input-group">
-                <label for="id_password">PW</label>
-                <input type="password" name="password" id="id_password" placeholder="비밀번호를 입력하세요">
+            <div class="social-login-group">
+                <a href="#" class="btn-social btn-naver">Naver로 로그인</a> <!--여기 링크들 다 소셜로그인url 나오면 바꿔야함-->
+                <a href="#" class="btn-social btn-google">Google로 로그인</a>
+                <a href="#" class="btn-social btn-kakao">카카오로 로그인</a>
             </div>
 
-            <button type="submit" class="btn-submit">로그인</button>
+            <div class="btn-area align-right">
+                <button type="submit" class="btn-submit">로그인</button>
+            </div>
+            
         </form>
-
-        <div class="social-login-group">
-            <a href="#" class="btn-social btn-facebook">Facebook으로 로그인</a>
-            <a href="#" class="btn-social btn-google">Google로 로그인</a>
-            <a href="#" class="btn-social btn-kakao">카카오로 로그인</a>
-        </div>
-        
-        <div class="auth-footer">
-            <a href="{% url 'users:signup' %}">회원가입 하러가기</a>
-        </div>
-
     </div>
 </div>
 {% endblock %}
