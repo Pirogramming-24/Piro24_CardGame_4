@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from .models import Game
 
 def main_view(request):
-    return render(request, 'games/main_list.html') # 일단 파일명 가칭(나중에 수정하셔요)
+    return render(request, 'games/main.html') # 일단 파일명 가칭(나중에 수정하셔요)
 
 # 1. 랭킹 페이지 조회 (백엔드 3)
 def ranking_list(request):
@@ -59,3 +59,9 @@ def counter_attack(request, game_id):
             
         game.save()
         return redirect('game_detail', game_id=game.id) # 반격 후 상세 페이지로 
+    
+def login_view(request):
+    return render(request, "users/login.html")
+
+def signup_view(request):
+    return render(request, "users/signup.html")
