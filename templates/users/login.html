@@ -1,7 +1,26 @@
-<h2>로그인</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">로그인</button>
-</form>
-<a href="{% url 'users:signup' %}">회원가입 하러가기</a>
+<div class="login-box">
+    <h1 class="title">Login</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="input-group">
+            <label for="id_username">ID</label>
+            <input type="text" name="username" id="id_username" required>
+        </div>
+
+        <div class="input-group">
+            <label for="id_password">PW</label>
+            <input type="password" name="password" id="id_password" required>
+        </div>
+
+        {% if form.errors %}
+            <p class="error-msg">아이디 또는 비밀번호가 일치하지 않습니다.</p>
+        {% endif %}
+
+        <button type="submit" class="btn-login">로그인</button>
+    </form>
+
+    <div class="social-buttons">
+        </div>
+</div>
