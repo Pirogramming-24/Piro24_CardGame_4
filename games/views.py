@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from .models import Game
 
 def main_view(request):
-    return render(request, 'games/main_list.html') # 일단 파일명 가칭(나중에 수정하셔요)
+    return render(request, 'games/main.html') # 일단 파일명 가칭(나중에 수정하셔요)
 
 # 1. 랭킹 페이지 조회 (백엔드 3)
 def ranking_list(request):
