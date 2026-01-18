@@ -34,14 +34,8 @@
     color: #935555; font-size: 60px; font-weight: 900;
 }
 .main-logined-body-hs .float-bg-hs .main-buttons-hs{display: flex; flex-wrap: nowrap;}
-.main-logined-body-hs .float-bg-hs .main-buttons-hs .loginbtn-hs{
+.main-logined-body-hs .float-bg-hs .main-buttons-hs .startbtn-hs{
     background-color: #935555; 
-    width: 80px; height: 30px; border-radius: 5px; 
-    text-align: center; color: white;
-    display: flex; align-items: center; justify-content: center; padding: 3px; margin: 5px;
-}
-.main-logined-body-hs .float-bg-hs .main-buttons-hs .signupbutn-hs{
-    background-color: #7C7C7C; 
     width: 80px; height: 30px; border-radius: 5px; 
     text-align: center; color: white;
     display: flex; align-items: center; justify-content: center; padding: 3px; margin: 5px;
