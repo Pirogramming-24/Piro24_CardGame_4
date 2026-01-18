@@ -31,6 +31,8 @@ class Game(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
 
+    result = models.CharField(max_length=20, default='진행중')
+    
     # 6. 승리 기준 (0: 큰 수 승리, 1: 작은 수 승리)
     # 반격 시점에 random으로 결정되어 저장됨
     win_criterion = models.IntegerField(null=True, blank=True)
