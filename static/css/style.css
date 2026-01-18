@@ -1,2 +1,120 @@
 /* base.html에 있는 주석 확인해주세요 */
+/* =========================================
+   1. 초기화 및 기본 설정 (Global)
+   ========================================= */
+/* reset.css에 없는 box-sizing 추가 (레이아웃 깨짐 방지) */
+* {
+    box-sizing: border-box;
+}
 
+body {
+    font-family: 'Noto Sans KR', sans-serif; /* 기본 폰트 */
+    color: #333;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+ul, li {
+    list-style: none;
+}
+
+/* =========================================
+   2. 전체 레이아웃 & 배경 (Background)
+   ========================================= */
+.main-background {
+    /* [체크] 이미지 파일명/경로가 맞는지 꼭 확인하세요! */
+    background-image: url('../images/background.png'); 
+    background-size: cover;      /* 화면 꽉 차게 */
+    background-position: center; /* 중앙 정렬 */
+    background-repeat: no-repeat;
+    
+    /* 화면 전체 높이 사용 (최소 높이 100vh) */
+    min-height: 100vh;
+    
+    /* Flexbox를 사용하여 헤더-본문 정렬 (Sticky Footer 효과) */
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================
+   3. 상단 네비게이션 바 (Header)
+   ========================================= */
+.nav-bar {
+    /* 요청하신 피그마 갈색 톤 반영 */
+    background-color: #935555; 
+    
+    height: 70px; /* 높이 약간 키움 */
+    width: 100%;
+    
+    /* 내용물 중앙 정렬 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* 그림자 살짝 줘서 입체감 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* 네비게이션 내용 담는 컨테이너 (너비 제한) */
+.nav-container {
+    width: 100%;
+    max-width: 1200px; /* 너무 넓어지지 않게 */
+    padding: 0 20px;   /* 양옆 여백 */
+    
+    display: flex;
+    justify-content: space-between; /* 로고 왼쪽, 메뉴 오른쪽 */
+    align-items: center;
+}
+
+/* =========================================
+   4. 로고 디자인 (Piro Card Match)
+   ========================================= */
+.nav-logo a {
+    /* 픽셀 폰트 적용 (HTML head에 폰트 링크 필요) */
+    font-family: 'NeoDunggeunmo', cursive;
+    color: #FFFFFF;
+    font-size: 24px;
+    text-shadow: 2px 2px 0px #4a2c2c; /* 글자 그림자 */
+    /* 혹시라도 줄바꿈 방지 */
+    white-space: nowrap;
+}
+
+/* =========================================
+   5. 메뉴 링크 (게임하기 / 랭킹보기 / 로그아웃)
+   ========================================= */
+.nav-links {
+    display: flex;
+    gap: 30px; /* 메뉴 사이 간격 */
+}
+
+.nav-links a {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    transition: color 0.2s ease;
+}
+
+/* 마우스 올렸을 때 효과 (노란색으로 강조) */
+.nav-links a:hover {
+    color: #FFD700; 
+}
+
+/* =========================================
+   6. 메인 컨텐츠 영역 (본문)
+   ========================================= */
+.content-wrapper {
+    /* 헤더 제외한 나머지 공간 다 차지하게 */
+    flex: 1;
+    
+    /* 내부 내용물 중앙 정렬 (로그인 박스 등이 가운데 오도록) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    padding: 20px;
+}
