@@ -13,4 +13,6 @@ urlpatterns = [
     # path('ranking/', views.ranking_list, name='ranking'), # 랭킹 페이지 주소 설정 [cite: 80]
     # 반격하기 처리 주소 (게임 ID를 넘겨받아야 함)
     # path('counter/<int:game_id>/', views.counter_attack, name='counter_attack'),
+    path("login/", views.login_view, name="login"),
+    path("signup/", views.signup_view, name="signup"),
 ]
