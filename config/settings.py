@@ -67,8 +67,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# 데이터베이스 설정 (로컬: SQLite, 도커: MySQL 자동 전환)
-if os.environ.get('DB_NAME'):
+# 도커 환경이라는 확실한 신호가 있을 때만 MySQL 사용
+if os.environ.get('DOCKER_MODE') == 'True':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -80,6 +80,7 @@ if os.environ.get('DB_NAME'):
         }
     }
 else:
+    # 로컬(내 컴퓨터)에서는 무조건 SQLite3 사용
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
