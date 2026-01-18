@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'games',
-
+    'users',
     # [소셜 로그인 및 폼 관련]
     'django.contrib.sites',
     'allauth',
@@ -112,3 +112,4 @@ LOGOUT_REDIRECT_URL = '/' # 로그아웃 후 이동할 페이지
 ACCOUNT_EMAIL_VERIFICATION = "none" # 이메일 인증 건너뛰기
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'users.User'
