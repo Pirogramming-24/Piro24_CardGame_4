@@ -20,9 +20,16 @@
                         {% elif item.rank == 3 %}bronze
                         {% endif %}"
                         style="height: {{ item.percent }}%;">
+
+                        <div class="score-above">
+                            {{ item.user.points }}점
+                        </div>
+
                         <div class="rank-label">{{ item.rank }}위</div>
                     </div>
                 </div>
+
+
 
                 <div class="user-label">
                     {{ item.user.nickname|default:item.user.username }}
