@@ -113,3 +113,14 @@ ACCOUNT_EMAIL_VERIFICATION = "none" # 이메일 인증 건너뛰기
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'kakao': {
+        'SCOPE': ['profile_nickname', 'account_email'],
+    }
+}
