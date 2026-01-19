@@ -1,15 +1,17 @@
 # users/forms.py
-
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
-# 현재 활성화된 유저 모델을 가져옵니다 (users.User)
 User = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
-    class Meta:
-        model = User  # <--- 중요! 우리가 만든 유저 모델과 연결
-        # 폼에 표시할 필드들 (비밀번호는 알아서 포함됨)
-        # HTML에서 name="first_name"으로 보낸 닉네임도 여기서 받아줍니다.
-        fields = ('username', 'first_name')
+    class Meta(UserCreationForm.Meta): # 기본 Meta 상속
+        model = User
+        # 'first_name' 대신 'nickname'을 포함시킵니다.
+        fields = UserCreationForm.Meta.fields + ('nickname',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # HTML 템플릿에서 'Name'으로 표시되는 필드의 라벨 변경
+        self.fields['nickname'].label = "Name"

@@ -1,3 +1,48 @@
-<!-- 반격 -->
-
 {% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/game_attack.css' %}">
+
+<div class="attack-main-frame">
+    <h1 class="auth-title">COUNTER ATTACK!!</h1>
+    
+    <form method="POST" class="attack-form">
+        {% csrf_token %}
+        
+        <div class="split-container" style="justify-content: center;">
+            <div class="section left-area">
+                <h2 class="section-label">반격할 카드를 선택하세요</h2>
+                <div class="card-grid">
+                    {% for card in random_cards %}
+                    <label class="card-item">
+                        <input type="radio" name="selected_card" value="{{ card }}" required>
+                        <div class="card-box">
+                            <span class="card-val">{{ card }}</span>
+                            <img src="{% static 'images/hat_icon.png' %}" class="selection-hat" alt="hat">
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="v-divider"></div>
+
+            <div class="section right-area">
+                <div>
+                    <h2 class="section-label">대결 상대</h2>
+                    <div class="select-container">
+                        <div class="pixel-select" style="display: flex; align-items: center; background-color: #eee;">
+                            {{ game.attacker.nickname }} ({{ game.attacker.points }} pts)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="attack-btn-box">
+                    <button type="submit" class="btn-submit">Counter!</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
