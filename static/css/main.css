@@ -1,6 +1,12 @@
-/* =========================================
-   메인 페이지 전용 스타일 (Main Page)
-   ========================================= */
+.nav-container {
+    display: flex;align-items: center;
+    background-color: #935555;
+    height: 150px;
+}
+.nav-container .nav-logo a{
+    padding: 10px;
+    color: white; text-decoration: none; font-size: 40px;
+}
 
 /* 메인 박스 (팀원분의 float-bg-hs 대체) */
 .main-box {

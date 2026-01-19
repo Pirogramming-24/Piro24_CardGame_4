@@ -10,7 +10,7 @@ urlpatterns = [
 
     # 게임 관련 기능 (games 앱)
     # 위 두 개가 아닌 나머지 주소는 다 games 폴더의 urls.py로 보냄
-    path('games', include('games.urls')),
+    path('games/', include('games.urls')),
     path('', TemplateView.as_view(template_name='games/main.html'), name='main'),
 ]
 

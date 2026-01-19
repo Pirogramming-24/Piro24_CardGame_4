@@ -1,0 +1,42 @@
+.nav-container {
+    display: flex;align-items: center;
+    background-color: #935555;
+    height: 150px;
+}
+.nav-container .nav-logo a{
+    padding: 10px;
+    color: white; text-decoration: none; font-size: 40px;
+}
+
+
+.main-logined-body-hs {
+  width: 100%;
+  min-height: calc(100vh - 80px); /* 메뉴바 높이만큼 빼기 */
+  
+  background-image: url("../images/background.png");
+  background-size: cover;        /* 화면에 꽉 차게 */
+  background-position: center;   /* 중앙 기준 */
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-logined-body-hs .float-bg-hs{
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background-color: #FFF1B9;
+    width: 600px; height: 400px;
+    border-radius: 10px;
+}
+
+.main-logined-body-hs .float-bg-hs .game-title-hs{
+    color: #935555; font-size: 60px; font-weight: 900;
+}
+.main-logined-body-hs .float-bg-hs .main-buttons-hs{display: flex; flex-wrap: nowrap;}
+.main-logined-body-hs .float-bg-hs .main-buttons-hs .startbtn-hs{
+    background-color: #935555; 
+    width: 80px; height: 30px; border-radius: 5px; 
+    text-align: center; color: white;
+    display: flex; align-items: center; justify-content: center; padding: 3px; margin: 5px;
+}

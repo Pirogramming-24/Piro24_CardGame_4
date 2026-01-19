@@ -1,3 +1,40 @@
-<!-- 랭킹 -->
-
 {% extends 'base.html' %}
+
+{% block content %}
+<div class="ranking-body-hs">
+    <div class="main-box">
+        <div class="gameranking-title-hs">
+            <p>게임 랭킹</p>
+        </div>
+
+        <div class="ranking-chart">
+            {% for item in ranking_data %}
+            <div class="chart-item">
+                
+
+                <div class="bar-vertical-container">
+                    <div
+                        class="bar-vertical
+                        {% if item.rank == 1 %}gold
+                        {% elif item.rank == 2 %}silver
+                        {% elif item.rank == 3 %}bronze
+                        {% endif %}"
+                        style="height: {{ item.percent }}%;">
+                        <div class="rank-label">{{ item.rank }}위</div>
+                    </div>
+                </div>
+
+                <div class="user-label">
+                    {{ item.user.nickname|default:item.user.username }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        <div class="gamelist-btn-hs">
+            <a href="{% url 'games:game_list' %}" class="gamelist-btn-hs">전적 목록</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
