@@ -9,17 +9,21 @@ def get_random_cards():
     cards = random.sample(range(1, 11), 5)
     return sorted(cards)
 
+@login_required
+def mainlogined_view(request):
+    return render(request, 'games/main_logined.html')
+
+# 1. 랭킹 페이지 조회 (백엔드 3)
 # 2. 뷰 함수 (페이지 연결)
 # 메인 페이지
 def main_view(request):
     if request.user.is_authenticated:
-        # 로그인 한 유저 -> 전적 리스트 (game_list.html)
-        games = Game.objects.filter(attacker=request.user) | Game.objects.filter(defender=request.user)
-        games = games.order_by('-created_at')
-        return render(request, 'games/game_list.html', {'games': games})
+        # 로그인 유저 → 로그인 메인
+        return render(request, 'games/main_logined.html')
     else:
-        # 로그인 안 한 유저 -> 대문 (main.html)
+        # 비로그인 유저 → 대문
         return render(request, 'games/main.html')
+
 
 # 공격하기 (게임 생성)
 @login_required
@@ -60,7 +64,27 @@ def attack_view(request):
 def ranking_list(request):
     User = get_user_model()
     users = User.objects.all().order_by('-points')
-    return render(request, 'games/ranking.html', {'users': users})
+
+    max_point = users[0].points if users.exists() else 0
+
+    ranking_data = []
+    for idx, user in enumerate(users, start=1):
+        percent = (user.points / max_point * 100) if max_point > 0 else 0
+
+        ranking_data.append({
+            'rank': idx,         
+            'user': user,
+            'percent': percent,
+        })
+
+    return render(
+        request,
+        'games/ranking.html',
+        {'ranking_data': ranking_data}
+    )
+
+
+
 
 # 게임 상세 페이지
 def game_detail_view(request, pk):
@@ -120,3 +144,16 @@ def login_view(request):
 
 def signup_view(request):
     return render(request, "users/signup.html")
+
+def game_list_view(request):
+    return render(request, "games/game_list.html")
+
+@login_required
+def game_list_view(request):
+    games = (
+        Game.objects.filter(attacker=request.user)
+        | Game.objects.filter(defender=request.user)
+    ).order_by('-created_at')
+
+    return render(request, 'games/game_list.html', {'games': games})
+
