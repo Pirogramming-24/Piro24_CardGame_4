@@ -107,7 +107,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # 소셜 로그인 설정
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/loginedmain/'  # 로그인 후 이동할 페이지
+LOGIN_REDIRECT_URL = '/games/loginedmain/'  # 로그인 후 이동할 페이지
 LOGOUT_REDIRECT_URL = '/' # 로그아웃 후 이동할 페이지
 ACCOUNT_EMAIL_VERIFICATION = "none" # 이메일 인증 건너뛰기
 
