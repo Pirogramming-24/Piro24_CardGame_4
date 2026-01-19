@@ -48,3 +48,21 @@ def logout_view(request):
     logout(request)
     # 로그아웃 후 다시 로그인 페이지로 이동
     return redirect('users:login')
+
+def ranking_list(request):
+    User = get_user_model()
+    users = User.objects.all().order_by('-points')
+
+    # 1등 점수 (그래프 비율 계산용)
+    max_point = users[0].points if users.exists() else 0
+
+    ranking_data = []
+    for idx, user in enumerate(users, start=1):
+        # 0으로 나누기 방지
+        percent = (user.points / max_point * 100) if max_point > 0 else 0
+
+        ranking_data.append({
+            'rank': idx,         
+            'user': user,
+            'percent': percent,
+        })
