@@ -28,7 +28,8 @@
                 </div>
 
                 <div class="status-area">
-                    {% if game.status == 'FINISHED' %}
+                    {% if game.result != '진행중' %}
+                        
                         {% if game.winner == user %}
                             <span class="badge badge-win">승리</span>
                         {% elif game.winner == None %}
@@ -40,18 +41,18 @@
                     {% else %}
                         {% if user == game.attacker %}
                             <span class="status-text">진행 중..</span>
-                            <form action="{% url 'games:delete' game.id %}" method="POST" style="display:inline;">
+                            <form action="{% url 'games:cancel_duel' game.id %}" method="POST" style="display:inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn-cancel-small" onclick="return confirm('게임을 취소하시겠습니까?');">취소하기</button>
                             </form>
                         {% else %}
-                            <a href="{% url 'games:detail' game.id %}" class="btn-counter">반격하기!</a>
+                            <a href="{% url 'games:counter_attack' game.id %}" class="btn-counter">반격하기!</a>
                         {% endif %}
                     {% endif %}
                 </div>
 
                 <div class="action-area">
-                    <a href="{% url 'games:detail' game.id %}" class="btn-info">게임 정보 보기</a>
+                    <a href="{% url 'games:game_detail' game.id %}" class="btn-info">게임 정보 보기</a>
                 </div>
 
             </div>

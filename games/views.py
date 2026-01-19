@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse 
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
+from django.db.models import Q  # [중요] 이거 없으면 에러 납니다!
 from .models import Game
 
 # 1. 유틸리티 함수
@@ -36,11 +37,9 @@ def main_view(request):
         # 대문 페이지
         return render(request, 'games/main.html')
 
-# [API] 상태 확인용 (공격자 대기화면에서 1초마다 호출)
+# [API] 상태 확인용
 def check_game_status(request, game_id):
     game = get_object_or_404(Game, id=game_id)
-    
-    # defender_card가 채워졌다면(반격 완료), 끝난 것으로 간주
     if game.defender_card is not None:
         return JsonResponse({'finished': True})
     else:
@@ -97,69 +96,60 @@ def attack_view(request):
 
 # 3. 비즈니스 로직 (반격)
 
-# [반격하기] : 결과 판정 및 점수 계산
+# [반격하기]
 @login_required
 def counter_attack(request, game_id):
     game = get_object_or_404(Game, id=game_id)
     
-    # 이미 방어한 게임이면(중복 반격 방지) 결과 페이지로 이동
+    # 이미 방어한 게임이면 결과 페이지로
     if game.defender_card is not None:
         return redirect('games:game_detail', pk=game.id)
 
-    # [GET] 반격 페이지 렌더링
     if request.method == 'GET':
-        random_cards = get_random_cards()
-        context = {
+        random_cards = random.sample(range(1, 11), 5) # 유틸함수 써도 됨
+        return render(request, 'games/game_counter.html', {
             'game': game,
-            'random_cards': random_cards
-        }
-        return render(request, 'games/game_counter.html', context)
+            'random_cards': sorted(random_cards)
+        })
 
-    # [POST] 카드 선택 및 결과 처리
     elif request.method == 'POST':
         selected_card = request.POST.get('selected_card')
-        
-        # 카드 선택 안 했을 경우 재시도
         if not selected_card:
             return redirect('games:counter_attack', game_id=game.id)
 
         selected_card = int(selected_card)
         game.defender_card = selected_card
         
-        # --- 승패 판정 로직 ---
+        # 승패 판정 로직
         if game.attacker_card == selected_card:
             game.winner = None 
-            game.result = '무승부'
+            game.result = '무승부' # [중요] 상태를 '진행중'에서 변경
         else:
-            # 승리 기준 랜덤 결정 (0: 큰 수 승리, 1: 작은 수 승리)
             criterion = random.choice([0, 1])
             game.win_criterion = criterion
             
-            att_card = game.attacker_card
-            def_card = game.defender_card
+            att = game.attacker_card
+            def_c = game.defender_card
             
-            # 승리 조건 검사
-            is_attacker_win = (criterion == 0 and att_card > def_card) or \
-                              (criterion == 1 and att_card < def_card)
+            # 0: 큰 수 승리, 1: 작은 수 승리
+            is_att_win = (criterion == 0 and att > def_c) or (criterion == 1 and att < def_c)
             
-            if is_attacker_win:
+            if is_att_win:
                 game.winner = game.attacker
-                game.result = '승리' # 공격자 기준
-                game.attacker.points += att_card
-                game.defender.points -= def_card
+                game.result = '승리' # 공격자 기준 결과 텍스트 (혹은 '종료'로 통일해도 됨)
+                game.attacker.points += att
+                game.defender.points -= def_c
             else:
                 game.winner = game.defender
-                game.result = '패배' # 공격자 기준
-                game.defender.points += def_card
-                game.attacker.points -= att_card
+                game.result = '패배'
+                game.defender.points += def_c
+                game.attacker.points -= att
             
-            # 변경된 점수 저장
             game.attacker.save()
             game.defender.save()
             
-        game.save()
+        game.save() # DB 저장 필수
         
-        # 수비자는 반격이 끝나면 바로 결과 페이지(Detail)로 이동
         return redirect('games:game_detail', pk=game.id)
 
 # [랭킹 페이지]
@@ -218,34 +208,30 @@ def login_view(request):
 def signup_view(request):
     return render(request, "users/signup.html")
 
+# [게임 취소]
 @login_required
 def cancel_duel(request, game_id):
     game = get_object_or_404(Game, id=game_id)
     
-    # 안전장치: 요청한 사람이 공격자가 맞는지, 아직 진행중인지 확인
+    # 본인이 공격자이고, 아직 '진행중'일 때만 삭제 가능
     if game.attacker == request.user and game.result == '진행중':
-        game.delete() # DB에서 게임 삭제
+        game.delete()
     
-    # 메인 페이지로 복귀
-    return redirect('games:main')
+    # 삭제 후엔 리스트로 돌아가는 게 자연스러움
+    return redirect('games:game_list')
 
+# [게임 리스트]
 @login_required
 def game_list(request):
     user = request.user
 
-    # 내가 참여한 모든 게임
-    games = (
-        Game.objects.filter(attacker=user) |
-        Game.objects.filter(defender=user)
+    # Q 객체를 사용해 내가 공격자거나 수비자인 게임 조회
+    games = Game.objects.filter(
+        Q(attacker=user) | Q(defender=user)
     ).order_by('-created_at')
 
-    # 나에게 온 진행중 게임 (수비자 입장)
-    pending_game = Game.objects.filter(
-        defender=user,
-        result=Game.STATUS_PROGRESS
-    ).first()
-
+    # 템플릿 렌더링
     return render(request, 'games/game_list.html', {
         'games': games,
-        'pending_game': pending_game,
+        # pending_game은 리스트 내에서 반복문으로 처리되므로 굳이 안 보내도 됩니다.
     })
