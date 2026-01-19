@@ -17,22 +17,23 @@ def get_random_cards():
 
 # [메인 페이지] : 전적 리스트 + 대결 요청 모달 확인
 def main_view(request):
+    # 1. 로그인 한 사람인가? (True)
     if request.user.is_authenticated:
-        # 1) 전적 리스트 (내가 공격했거나 방어했던 모든 게임)
         games = Game.objects.filter(attacker=request.user) | Game.objects.filter(defender=request.user)
         games = games.order_by('-created_at')
         
-        # 2) [중요] 나에게 온 '진행중'인 대결 요청 확인 (모달용)
-        # defender가 '나'이고, 결과가 아직 '진행중'인 게임 중 가장 최신 것
         pending_game = Game.objects.filter(defender=request.user, result='진행중').first()
         
         context = {
             'games': games,
             'pending_game': pending_game 
         }
-        return render(request, 'games/game_list.html', context)
+        # [수정] 원래 'games/game_list.html' 이었던 것을 -> 'games/logined.html'로 변경!
+        return render(request, 'games/main_logined.html', context)
+
+    # 2. 로그인 안 한 사람인가? (False)
     else:
-        # 로그인 안 한 유저 -> 대문 페이지
+        # 대문 페이지
         return render(request, 'games/main.html')
 
 # [API] 상태 확인용 (공격자 대기화면에서 1초마다 호출)
