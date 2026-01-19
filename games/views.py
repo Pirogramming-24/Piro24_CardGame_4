@@ -54,6 +54,7 @@ def attack_view(request):
     if request.method == 'GET':
         random_cards = get_random_cards()
         other_users = User.objects.exclude(id=request.user.id)
+        pending_game = Game.objects.filter(defender=request.user, result='진행중').first()
         context = {
             'random_cards': random_cards, 
             'other_users': other_users
