@@ -1,178 +1,65 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}게임 전적 - Piro Card Match{% endblock %}
+
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/game_attack.css' %}">
+<link rel="stylesheet" href="{% static 'css/game_list.css' %}">
 
-<div class="attack-main-frame">
-    <h1 class="auth-title">MY GAME RECORD</h1>
-    
-    <div class="game-list-container">
-        {% if games %}
-            <ul class="game-list">
-                {% for game in games %}
-                <li class="game-item">
-                    <div class="game-info">
-                        <span class="date">{{ game.created_at|date:"m/d H:i" }}</span>
-                        
-                        <span class="opponent">
-                            vs 
-                            {% if game.attacker == user %}
-                                {{ game.defender.nickname }}
-                            {% else %}
-                                {{ game.attacker.nickname }}
-                            {% endif %}
-                        </span>
-                    </div>
-
-                    <div class="game-result">
-                        {% if game.result == '진행중' %}
-                            <span class="badge pending">진행중...</span>
-                        {% elif game.result == '무승부' %}
-                            <span class="badge draw">DRAW</span>
-                        {% else %}
-                            {% if game.winner == user %}
-                                <span class="badge win">WIN</span>
-                                <span class="score-diff plus">+{{ game.attacker_card }}</span> {% else %}
-                                <span class="badge lose">LOSE</span>
-                                <span class="score-diff minus">-{{ game.attacker_card }}</span>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                    
-                    {% if game.result != '진행중' %}
-                    <a href="{% url 'games:game_detail' game.id %}" class="btn-detail">결과보기 ></a>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <div class="no-record">
-                <p>아직 진행한 게임이 없습니다.</p>
-                <p>새로운 대결을 시작해보세요!</p>
-            </div>
-        {% endif %}
-    </div>
-
-    <div class="attack-btn-box" style="margin-top: 20px;">
-        <a href="{% url 'games:game_attack' %}" class="btn-submit">
-            대결 신청하기 ⚔️
-        </a>
-    </div>
-</div>
-
-{% if pending_game %}
-<div class="modal-overlay">
-    <div class="modal-box">
-        <h2 class="modal-title">🔥 대결 요청 도착! 🔥</h2>
+<div class="main-container">
+    <div class="list-box">
         
-        <div class="modal-content">
-            <p class="challenger-name">
-                <strong>{{ pending_game.attacker.nickname }}</strong> 님이<br>
-                승부를 걸어왔습니다!
-            </p>
-            <p class="desc">도전을 받아주시겠습니까?</p>
+        <h1 class="list-title">게임 전적 리스트</h1>
+        
+        <div class="user-info-bar">
+            현재 플레이어: <span class="highlight-name">{{ user.first_name|default:user.username }}</span>
         </div>
 
-        <div class="modal-actions">
-            <a href="{% url 'games:counter_attack' pending_game.id %}" class="btn-accept">
-                대결 수락하기 (YES)
-            </a>
+        <div class="divider"></div>
+
+        <div class="game-list-container">
+            {% for game in games %}
+            <div class="game-item">
+                
+                <div class="match-info">
+                    <span class="p-name">{{ game.attacker.first_name|default:game.attacker.username }}</span>
+                    <span class="vs">:</span>
+                    <span class="p-name">{{ game.defender.first_name|default:game.defender.username }}</span>
+                </div>
+
+                <div class="status-area">
+                    {% if game.status == 'FINISHED' %}
+                        {% if game.winner == user %}
+                            <span class="badge badge-win">승리</span>
+                        {% elif game.winner == None %}
+                            <span class="badge badge-draw">무승부</span>
+                        {% else %}
+                            <span class="badge badge-lose">패배</span>
+                        {% endif %}
+
+                    {% else %}
+                        {% if user == game.attacker %}
+                            <span class="status-text">진행 중..</span>
+                            <form action="{% url 'games:delete' game.id %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-cancel-small" onclick="return confirm('게임을 취소하시겠습니까?');">취소하기</button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'games:detail' game.id %}" class="btn-counter">반격하기!</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="action-area">
+                    <a href="{% url 'games:detail' game.id %}" class="btn-info">게임 정보 보기</a>
+                </div>
+
             </div>
+            {% empty %}
+                <div class="empty-msg">아직 진행된 게임이 없습니다. 🤠</div>
+            {% endfor %}
+        </div>
+
     </div>
 </div>
-{% endif %}
-
-<style>
-    /* 리스트 스타일 */
-    .game-list-container {
-        background-color: #fff;
-        border: 2px solid #333;
-        border-radius: 10px;
-        padding: 20px;
-        max-height: 400px;
-        overflow-y: auto;
-        margin-bottom: 20px;
-    }
-    .game-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px dashed #ccc;
-        font-family: 'NeoDunggeunmo';
-    }
-    .game-item:last-child { border-bottom: none; }
-    
-    .badge {
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-weight: bold;
-        color: white;
-    }
-    .badge.win { background-color: #4CAF50; }
-    .badge.lose { background-color: #FF5252; }
-    .badge.draw { background-color: #FFC107; color: #333; }
-    .badge.pending { background-color: #9E9E9E; }
-
-    .btn-detail {
-        text-decoration: none;
-        color: #666;
-        font-size: 14px;
-    }
-
-    /* [모달 스타일] */
-    .modal-overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background-color: rgba(0, 0, 0, 0.7); /* 배경 어둡게 */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
-    .modal-box {
-        background-color: #FDF5E6; /* 베이지색 */
-        border: 4px solid #935555; /* 갈색 테두리 */
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        width: 350px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        animation: popUp 0.3s ease-out;
-    }
-    .modal-title {
-        font-family: 'NeoDunggeunmo';
-        color: #d63031;
-        font-size: 28px;
-        margin-bottom: 20px;
-    }
-    .challenger-name {
-        font-family: 'NeoDunggeunmo';
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-    .btn-accept {
-        display: inline-block;
-        margin-top: 20px;
-        background-color: #935555;
-        color: white;
-        padding: 12px 24px;
-        text-decoration: none;
-        font-family: 'NeoDunggeunmo';
-        border-radius: 8px;
-        font-size: 18px;
-        transition: 0.2s;
-    }
-    .btn-accept:hover {
-        background-color: #d63031;
-        transform: scale(1.05);
-    }
-    
-    @keyframes popUp {
-        from { transform: scale(0.7); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
-</style>
 {% endblock %}
