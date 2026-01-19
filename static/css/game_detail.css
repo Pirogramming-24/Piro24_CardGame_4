@@ -1,0 +1,177 @@
+/* static/css/game_detail.css */
+
+/* 1. 게임 박스 (기본 틀) - 베이지색 */
+.game-box {
+    background-color: #FFF1B9;
+    width: 500px; /* 피그마 비율에 맞춰 조정 */
+    max-width: 90%;
+    min-height: 500px;
+    padding: 40px;
+    
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+/* 2. 대결 정보 헤더 (User VS User) */
+.match-header {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 24px;
+    color: #3878A8; /* 파란색 텍스트 (피그마 반영) */
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.vs-text {
+    color: #333;
+    font-size: 20px;
+}
+
+/* 구분선 */
+.divider {
+    width: 100%;
+    height: 2px;
+    background-color: #333;
+    margin-bottom: 30px;
+}
+
+.divider-thin {
+    width: 80%;
+    height: 1px;
+    background-color: #aaa;
+    margin: 20px 0;
+}
+
+/* 3. 텍스트 스타일 */
+.game-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'NeoDunggeunmo', cursive; /* 픽셀 폰트 */
+}
+
+.rule-text {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.rule-highlight {
+    color: #935555;
+    font-weight: bold;
+}
+
+.waiting-text {
+    font-size: 24px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.my-card-info {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+/* 4. 점수판 */
+.score-board {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.result-display, .point-display {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* 5. 버튼 스타일 */
+.action-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.btn-action {
+    padding: 10px 30px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    width: 150px;
+    text-align: center;
+}
+
+.btn-red { background-color: #D9534F; } /* 게임 취소 (빨강) */
+.btn-gray { background-color: #777; }    /* 목록 (회색) */
+
+/* =========================================
+   6. 팝업 모달 (Modal) 스타일 - 두번째 사진
+   ========================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* 배경 흐리게 (검정 70%) */
+    z-index: 9999; /* 맨 위에 뜨게 */
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-window {
+    background-color: white;
+    width: 500px;
+    padding: 50px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-text {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 22px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+}
+
+.highlight {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.modal-btn-area {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn-modal {
+    padding: 10px 40px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
+
+.btn-yes { background-color: #007bff; } /* 파란색 */
+.btn-no { background-color: #D9534F; }  /* 빨간색 */

@@ -1,0 +1,173 @@
+/* static/css/signup.css */
+
+/* =========================================
+   1. 회원가입 박스 (로그인과 동일한 베이스)
+   ========================================= */
+.signup-box {
+    background-color: #FFF1B9; /* 베이지색 배경 */
+    
+    /* PC 고정, 모바일 반응형 */
+    width: 648px; 
+    max-width: 90%;
+    
+    /* 입력 항목이 많으므로 높이를 조금 더 여유 있게 잡음 */
+    min-height: 680px;
+    height: auto;
+    
+    /* 내부 여백 */
+    padding: 30px 40px; 
+    
+    border-radius: 10px;
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    box-sizing: border-box; 
+}
+
+/* =========================================
+   2. 타이틀 (Sign up)
+   ========================================= */
+.auth-title {
+    font-family: 'NeoDunggeunmo', cursive;
+    color: #935555;
+    font-weight: 900;
+    
+    font-size: 55px; 
+    margin-top: 10px;
+    margin-bottom: 30px; /* 제목과 갈색 박스 사이 간격 */
+    
+    text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+}
+
+/* =========================================
+   3. 내부 갈색 박스 (피그마 디자인 반영)
+   ========================================= */
+.auth-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup-inner-box {
+    background-color: #935555; /* 진한 갈색 배경 */
+    width: 100%;
+    max-width: 500px; /* 내부 박스 너비 제한 */
+    
+    padding: 30px; /* 갈색 박스 내부 여백 */
+    border-radius: 5px; /* 모서리 살짝 둥글게 */
+    
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 입력창 사이 간격 */
+    
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); /* 안쪽 그림자로 깊이감 */
+}
+
+/* =========================================
+   4. 입력창 디자인
+   ========================================= */
+.input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 라벨은 sr-only로 숨겨져 있지만, 혹시 보일 경우를 대비해 스타일 지정 */
+.input-group label {
+    display: none; /* 피그마 디자인상 라벨 없이 placeholder만 사용 */
+}
+
+/* 실제 입력칸 */
+.auth-form input {
+    width: 100%;
+    height: 50px; /* 높이 통일 */
+    padding: 0 15px;
+    
+    border: none;
+    border-radius: 5px;
+    background-color: #FFFFFF; /* 흰색 배경 */
+    
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px; 
+    color: #333;
+    outline: none;
+}
+
+/* 플레이스홀더 색상 (갈색 배경 위라 약간 연하게) */
+.auth-form input::placeholder {
+    color: #aaa;
+    font-size: 15px;
+}
+
+/* =========================================
+   5. 회원가입 버튼 (우측 하단 고정)
+   ========================================= */
+.btn-area {
+    position: absolute;
+    bottom: 30px;       
+    right: 40px;        
+}
+
+.btn-submit {
+    background-color: #935555;
+    color: white;
+    
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    font-size: 18px; 
+    
+    padding: 10px 25px; 
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-submit:hover { 
+    background-color: #7a4444; 
+}
+
+.btn-submit:active { 
+    transform: scale(0.96); 
+}
+
+/* =========================================
+   [모바일 반응형]
+   ========================================= */
+@media screen and (max-width: 500px) {
+    .signup-box {
+        padding: 30px 20px;
+        width: 90%; 
+        min-height: auto;
+    }
+    
+    .auth-title { 
+        font-size: 40px; 
+        margin-bottom: 20px; 
+    }
+    
+    .signup-inner-box {
+        padding: 20px; /* 모바일에서는 내부 여백 줄임 */
+        width: 100%;
+    }
+    
+    /* 버튼 위치 조정 (모바일은 중앙 하단) */
+    .btn-area {
+        position: static; /* 고정 해제 */
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        max-width: 320px;
+    }
+}
