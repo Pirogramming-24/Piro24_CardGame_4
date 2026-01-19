@@ -13,9 +13,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-default-key')
 DEBUG = env('DEBUG', default=True)
 ALLOWED_HOSTS = ['*']
-
-
-
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000', ]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -119,11 +119,11 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-SOCIALACCOUNT_PROVIDERS = {
-    'kakao': {
-        'SCOPE': [], # 기본 정보 (ID, 닉네임)
-    }
-}
+
+
+
+
+    
 
 # True일 경우: 구글 인증 후 바로 가입 완료 (편리함)
 # False일 경우: 구글 인증 후 추가 정보(닉네임 등) 입력 페이지로 이동
@@ -132,5 +132,28 @@ SOCIALACCOUNT_AUTO_SIGNUP = True
 # True일 경우: "정말 로그인하시겠습니까?"라는 중간 확인 페이지를 생략하고 바로 구글창을 띄움
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# config/settings.py
+
+SOCIALACCOUNT_PROVIDERS = {
+    'naver': {
+        'APP': {
+            'client_id': env('NAVER_CLIENT_ID'),
+            'secret': env('NAVER_CLIENT_SECRET'),
+            'key': ''
+        }
+    },
+    'kakao': {
+        'APP': {
+            'client_id': env('KAKAO_REST_API_KEY'),
+            'secret': env('KAKAO_CLIENT_SECRET', default=''),
+            'key': ''
+        },
+    },
+    'google': {
+        'APP': {
+            'client_id': env('GOOGLE_CLIENT_ID'),
+            'secret': env('GOOGLE_CLIENT_SECRET'),
+            'key': ''
+        }
+    }
+}
