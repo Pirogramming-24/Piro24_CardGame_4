@@ -45,29 +45,28 @@ ul, li {
    3. 상단 네비게이션 바 (Header)
    ========================================= */
 .nav-bar {
-    /* 요청하신 피그마 갈색 톤 반영 */
     background-color: #935555; 
     
-    height: 70px; /* 높이 약간 키움 */
+    height: 70px;
     width: 100%;
     
-    /* 내용물 중앙 정렬 */
+
     display: flex;
     justify-content: center;
     align-items: center;
     
-    /* 그림자 살짝 줘서 입체감 */
+
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* 네비게이션 내용 담는 컨테이너 (너비 제한) */
+
 .nav-container {
     width: 100%;
-    max-width: 1200px; /* 너무 넓어지지 않게 */
-    padding: 0 20px;   /* 양옆 여백 */
+    max-width: 1200px; 
+    padding: 0 20px;
     
     display: flex;
-    justify-content: space-between; /* 로고 왼쪽, 메뉴 오른쪽 */
+    justify-content: space-between; 
     align-items: center;
 }
 

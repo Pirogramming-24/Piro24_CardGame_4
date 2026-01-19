@@ -24,7 +24,7 @@ def login_view(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('/') # 메인 페이지로 이동 (지금은 에러날 수 있음)
+            return redirect('games:logined_main')
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})
