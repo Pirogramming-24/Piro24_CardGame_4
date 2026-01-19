@@ -149,7 +149,6 @@ def game_list(request):
 
     return render(request, 'games/game_list.html', {'games': games})
 
-# [랭킹 페이지]
 def ranking_list(request):
     User = get_user_model()
     users = User.objects.all().order_by('-points')
@@ -157,21 +156,30 @@ def ranking_list(request):
     if not users.exists():
         return render(request, 'games/ranking.html', {'ranking_data': []})
 
-    # 1등 점수 (그래프 비율용)
-    max_point = users.first().points 
+    max_point = users.first().points
+    min_point = users.last().points
+
+    # 모든 점수가 같은 경우 (0으로 나누기 방지)
+    range_point = max_point - min_point
 
     ranking_data = []
     for idx, user in enumerate(users, start=1):
-        # 점수가 양수일 때만 그래프 비율 계산
-        percent = (user.points / max_point * 100) if max_point > 0 and user.points > 0 else 0
+        if range_point > 0:
+            percent = (user.points - min_point) / range_point * 100
+        else:
+            percent = 100  # 전부 같은 점수면 동일 높이
 
         ranking_data.append({
-            'rank': idx,         
+            'rank': idx,
             'user': user,
             'percent': percent,
         })
 
-    return render(request, 'games/ranking.html', {'ranking_data': ranking_data})
+    return render(
+        request,
+        'games/ranking.html',
+        {'ranking_data': ranking_data}
+    )
 
 # [게임 취소]
 @login_required
