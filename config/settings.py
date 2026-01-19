@@ -121,6 +121,16 @@ AUTHENTICATION_BACKENDS = [
 
 SOCIALACCOUNT_PROVIDERS = {
     'kakao': {
-        'SCOPE': ['profile_nickname', 'account_email'],
+        'SCOPE': [], # 기본 정보 (ID, 닉네임)
     }
 }
+
+# True일 경우: 구글 인증 후 바로 가입 완료 (편리함)
+# False일 경우: 구글 인증 후 추가 정보(닉네임 등) 입력 페이지로 이동
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# True일 경우: "정말 로그인하시겠습니까?"라는 중간 확인 페이지를 생략하고 바로 구글창을 띄움
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
