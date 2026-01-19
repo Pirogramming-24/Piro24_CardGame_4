@@ -18,13 +18,12 @@ def mainlogined_view(request):
 # 메인 페이지
 def main_view(request):
     if request.user.is_authenticated:
-        # 로그인 한 유저 -> 전적 리스트 (game_list.html)
-        games = Game.objects.filter(attacker=request.user) | Game.objects.filter(defender=request.user)
-        games = games.order_by('-created_at')
-        return render(request, 'games/game_list.html', {'games': games})
+        # 로그인 유저 → 로그인 메인
+        return render(request, 'games/main_logined.html')
     else:
-        # 로그인 안 한 유저 -> 대문 (main.html)
+        # 비로그인 유저 → 대문
         return render(request, 'games/main.html')
+
 
 # 공격하기 (게임 생성)
 @login_required
@@ -73,7 +72,7 @@ def ranking_list(request):
         percent = (user.points / max_point * 100) if max_point > 0 else 0
 
         ranking_data.append({
-            'rank': idx,          # 👈 순위 추가
+            'rank': idx,         
             'user': user,
             'percent': percent,
         })
@@ -146,5 +145,15 @@ def login_view(request):
 def signup_view(request):
     return render(request, "users/signup.html")
 
-def game_list(request):
+def game_list_view(request):
     return render(request, "games/game_list.html")
+
+@login_required
+def game_list_view(request):
+    games = (
+        Game.objects.filter(attacker=request.user)
+        | Game.objects.filter(defender=request.user)
+    ).order_by('-created_at')
+
+    return render(request, 'games/game_list.html', {'games': games})
+
