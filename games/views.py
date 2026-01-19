@@ -65,7 +65,27 @@ def attack_view(request):
 def ranking_list(request):
     User = get_user_model()
     users = User.objects.all().order_by('-points')
-    return render(request, 'games/ranking.html', {'users': users})
+
+    max_point = users[0].points if users.exists() else 0
+
+    ranking_data = []
+    for idx, user in enumerate(users, start=1):
+        percent = (user.points / max_point * 100) if max_point > 0 else 0
+
+        ranking_data.append({
+            'rank': idx,          # 👈 순위 추가
+            'user': user,
+            'percent': percent,
+        })
+
+    return render(
+        request,
+        'games/ranking.html',
+        {'ranking_data': ranking_data}
+    )
+
+
+
 
 # 게임 상세 페이지
 def game_detail_view(request, pk):
@@ -125,3 +145,6 @@ def login_view(request):
 
 def signup_view(request):
     return render(request, "users/signup.html")
+
+def game_list(request):
+    return render(request, "games/game_list.html")
