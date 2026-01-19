@@ -1,13 +1,40 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}게임 상세 - Piro Card Match{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/game_detail.css' %}">
 
+<div id="video-overlay" style="display: none;">
+    <video id="game-video" style="width: 100%; height: 100%; object-fit: cover;" playsinline muted>
+        <source src="" type="video/mp4">
+        브라우저가 비디오를 지원하지 않습니다.
+    </video>
+    <button id="btn-play-video">
+        결과 확인하기 (Click!)
+    </button>
+</div>
+
 <div class="main-container">
     
+    {% if game.result == '진행중' and user == game.defender %}
+    <div class="modal-overlay">
+        <div class="modal-window">
+            <p class="modal-text">
+                <span class="highlight">{{ game.attacker.nickname }}</span>님이<br>
+                대결을 요청하셨습니다.<br>
+                수락하시겠습니까? 🔫
+            </p>
+            <div class="modal-btn-area">
+                <a href="{% url 'games:counter_attack' game.id %}" class="btn-modal btn-yes">예</a>
+                <a href="{% url 'games:game_list' %}" class="btn-modal btn-no">아니요</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="game-box">
-        
         <div class="match-header">
             <span class="player-name left">{{ game.attacker.nickname }}</span>
             <span class="vs-text">VS</span>
@@ -18,15 +45,17 @@
 
         {% if game.result == '진행중' %}
             <div class="game-content">
-                <p class="waiting-text">진행 중..</p>
+                <p class="waiting-text">상대방의 반격을 기다리고 있습니다...</p>
                 
+                {% if user == game.attacker %}
                 <p class="my-card-info">
-                    나: <span class="card-num">{{ game.attacker_card }}</span>
+                    내가 낸 카드: <span class="card-num">{{ game.attacker_card }}</span>
                 </p>
+                {% endif %}
 
                 <div class="action-area">
                     {% if user == game.attacker %}
-                    <a href="{% url 'games:cancel_duel' game.id %}" class="btn-action btn-red">
+                    <a href="{% url 'games:cancel_duel' game.id %}" class="btn-action btn-red" onclick="return confirm('정말 게임을 취소하시겠습니까?');">
                         게임 취소
                     </a>
                     {% endif %}
@@ -42,7 +71,8 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.finished) {
-                            window.location.reload();
+                            // 수비자가 반격하면 공격자도 영상을 봐야 하므로 '?reveal=true'를 붙여서 이동
+                            window.location.href = window.location.pathname + "?reveal=true";
                         }
                     });
                 }, 1000);
@@ -50,7 +80,6 @@
 
         {% else %}
             <div class="game-content">
-                
                 <p class="rule-text">
                     숫자가 <span class="rule-highlight">
                         {% if game.win_criterion == 0 %}큰{% else %}작은{% endif %}
@@ -77,11 +106,11 @@
                         결과: 
                         <span class="result-val">
                             {% if game.result == '무승부' %}
-                                무승부
+                                무승부 🤝
                             {% elif game.winner == user %}
-                                승리
+                                승리 🎉
                             {% else %}
-                                패배
+                                패배 💀
                             {% endif %}
                         </span>
                     </p>
@@ -91,7 +120,7 @@
                         <span class="point-val">
                             {% if game.winner == user %}
                                 +{{ game.attacker_card }}
-                            {% elif game.winner == None %}
+                            {% elif game.result == '무승부' %}
                                 0
                             {% else %}
                                 -{{ game.attacker_card }}
@@ -108,4 +137,99 @@
 
     </div>
 </div>
+
+<style>
+    /* 영상 전체화면 스타일 */
+    #video-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: black;
+        z-index: 99999; /* 모달보다 더 위에 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    /* 수동 재생 버튼 스타일 */
+    #btn-play-video {
+        position: absolute; 
+        top: 50%; left: 50%; 
+        transform: translate(-50%, -50%); 
+        padding: 20px 40px; 
+        font-size: 24px; 
+        cursor: pointer; 
+        display: none;
+        background: #D9534F;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 주소창에 ?reveal=true 가 있는지 확인
+        const urlParams = new URLSearchParams(window.location.search);
+        const isReveal = urlParams.get('reveal');
+
+        if (isReveal === 'true') {
+            const overlay = document.getElementById('video-overlay');
+            const videoElement = document.getElementById('game-video');
+            const playBtn = document.getElementById('btn-play-video');
+
+            // [중요] 재생할 파일 경로 (static/videos/ 폴더에 파일 필수!)
+            const playlist = [
+                "{% static 'videos/intro.mp4' %}",  
+                "{% static 'videos/reveal.mp4' %}"   
+            ];
+            
+            let currentVideoIndex = 0;
+
+            function playNextVideo() {
+                if (currentVideoIndex < playlist.length) {
+                    videoElement.src = playlist[currentVideoIndex];
+                    videoElement.load();
+                    
+                    const playPromise = videoElement.play();
+                    
+                    // 브라우저가 자동재생을 막으면 버튼을 보여줌
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log("자동 재생 막힘, 버튼 표시");
+                            playBtn.style.display = 'block';
+                        });
+                    }
+                    currentVideoIndex++;
+                } else {
+                    finishVideoSequence();
+                }
+            }
+
+            // 영상이 끝나면 다음 영상 재생
+            videoElement.onended = function() {
+                playNextVideo();
+            };
+
+            // 모든 영상 종료 시
+            function finishVideoSequence() {
+                overlay.style.display = 'none';
+                // 주소창에서 ?reveal=true 제거 (새로고침 시 또 재생 안 되게)
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+
+            // 시작: 가림막 켜고 첫 영상 재생
+            overlay.style.display = 'flex';
+            playNextVideo();
+
+            // 수동 버튼 클릭 시 (소리 켜고 재생)
+            playBtn.addEventListener('click', function() {
+                playBtn.style.display = 'none';
+                videoElement.muted = false; 
+                videoElement.play();
+            });
+        }
+    });
+</script>
 {% endblock %}

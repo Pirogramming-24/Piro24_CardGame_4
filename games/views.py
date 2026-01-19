@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse 
 from django.db.models import Q
 from .models import Game
+from django.urls import reverse # 파일 맨 위에 추가되어 있는지 확인하세요
 
 # 1. 유틸리티 함수
 def get_random_cards():
@@ -130,7 +131,8 @@ def counter_attack(request, game_id):
             
         game.save()
         
-        return redirect('games:game_detail', pk=game.id)
+        # 결과 페이지로 보낼 때 ?reveal=true를 붙여서 영상 재생 신호를 보냅니다.
+        return redirect(reverse('games:game_detail', kwargs={'pk': game.id}) + '?reveal=true')
 
 # [게임 상세 페이지] : 결과 화면
 @login_required
