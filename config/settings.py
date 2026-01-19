@@ -107,7 +107,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # 소셜 로그인 설정
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/loginedmain/'  # 로그인 후 이동할 페이지
+LOGIN_REDIRECT_URL = '/games/loginedmain/'  # 로그인 후 이동할 페이지
 LOGOUT_REDIRECT_URL = '/' # 로그아웃 후 이동할 페이지
 ACCOUNT_EMAIL_VERIFICATION = "none" # 이메일 인증 건너뛰기
 
@@ -121,6 +121,16 @@ AUTHENTICATION_BACKENDS = [
 
 SOCIALACCOUNT_PROVIDERS = {
     'kakao': {
-        'SCOPE': ['profile_nickname', 'account_email'],
+        'SCOPE': [], # 기본 정보 (ID, 닉네임)
     }
 }
+
+# True일 경우: 구글 인증 후 바로 가입 완료 (편리함)
+# False일 경우: 구글 인증 후 추가 정보(닉네임 등) 입력 페이지로 이동
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# True일 경우: "정말 로그인하시겠습니까?"라는 중간 확인 페이지를 생략하고 바로 구글창을 띄움
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+import logging
+logging.basicConfig(level=logging.DEBUG)

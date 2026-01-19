@@ -31,14 +31,14 @@ def login_view(request):
 
 # [채령 추가] 소셜 로그인 임시 함수 (에러 방지용 껍데기) 이거 런서버가 계속 안되서 아무 내용없는 함수 넣었어요
 #소셜로그인 구현 하실때 지우고 하시거나 해주세요
-def naver_login(request):
-    return redirect('users:login') 
+# def naver_login(request):
+#     return redirect('users:login') 
 
-def google_login(request):
-    return redirect('users:login')
+# def google_login(request):
+#     return redirect('users:login')
 
-def kakao_login(request):
-    return redirect('users:login')
+# def kakao_login(request):
+#     return redirect('users:login')
 
 # 3. 로그아웃
 def logout_view(request):
