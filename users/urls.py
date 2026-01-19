@@ -4,8 +4,13 @@ from . import views
 app_name = 'users'
 
 urlpatterns = [
-    path('signup/', views.signup, name='signup'),
+    # 1. 회원가입 (views.signup -> views.signup_view 로 변경)
+    path('signup/', views.signup_view, name='signup'),
+
+    # 2. 로그인
     path('login/', views.login_view, name='login'),
+
+    # 3. 로그아웃
     path('logout/', views.logout_view, name='logout'),
 
     # [채령 추가] 소셜 로그인 URL 패턴
