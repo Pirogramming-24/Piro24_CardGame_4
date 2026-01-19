@@ -30,7 +30,7 @@ def main_view(request):
             'games': games,
             'pending_game': pending_game 
         }
-        return render(request, 'games/game_list.html', context)
+        return render(request, 'games/main_logined.html', context)
     else:
         # 로그인 안 한 유저 -> 대문 페이지
         return render(request, 'games/main.html')
