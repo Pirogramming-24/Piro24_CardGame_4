@@ -68,19 +68,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # 도커 환경이라는 확실한 신호가 있을 때만 MySQL 사용
-if os.environ.get('DOCKER_MODE') == 'True':
+if os.environ.get('DB_HOST'):
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': env('DB_NAME'),
-            'USER': env('DB_USER'),
-            'PASSWORD': env('DB_PASSWORD'),
-            'HOST': env('DB_HOST'),
-            'PORT': env('DB_PORT'),
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
         }
     }
 else:
-    # 로컬(내 컴퓨터)에서는 무조건 SQLite3 사용
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
