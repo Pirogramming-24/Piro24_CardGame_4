@@ -1,17 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+# [수정] 우리가 만든 폼을 가져옵니다!
+from .forms import CustomUserCreationForm
 
 # 1. 회원가입
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        # [수정] UserCreationForm -> CustomUserCreationForm으로 변경
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # 가입하자마자 자동 로그인
-            return redirect('users:login') # 일단 로그인 페이지로 보냄 (나중에 메인으로 수정)
+            login(request, user)
+            return redirect('users:login') 
     else:
-        form = UserCreationForm()
+        # [수정] 여기도 변경
+        form = CustomUserCreationForm()
     return render(request, 'users/signup.html', {'form': form})
 
 # 2. 로그인
@@ -24,6 +28,17 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})
+
+# [채령 추가] 소셜 로그인 임시 함수 (에러 방지용 껍데기) 이거 런서버가 계속 안되서 아무 내용없는 함수 넣었어요
+#소셜로그인 구현 하실때 지우고 하시거나 해주세요
+def naver_login(request):
+    return redirect('users:login') 
+
+def google_login(request):
+    return redirect('users:login')
+
+def kakao_login(request):
+    return redirect('users:login')
 
 # 3. 로그아웃
 def logout_view(request):
