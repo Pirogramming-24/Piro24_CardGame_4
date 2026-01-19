@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/neodgm@latest/neodgm.css">
     
     <link rel="stylesheet" href="{% static 'css/reset.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"> <!--베이스 style.css 링크해둠. 초기화 css인 reset.css도 필요하면 생성후 여기 링크하기-->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/ranking.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main_logined.css' %}">
 </head>
 <body class="main-background">
 
@@ -23,7 +25,7 @@
                     <a href="{% url 'games:game_attack' %}">게임하기</a>
                     <a href="{% url 'games:ranking' %}">랭킹보기</a>
                     
-                    <a href="{% url 'users:logout' %}">로그아웃</a> <!--아직 링크 미정이라 #으로 해둠 나중에 수정해야함. 수정완료!!! -->
+                    <a href="{% url 'users:logout' %}">로그아웃</a> <!--아직 링크 미정이라 #으로 해둠 나중에 수정해야함. 수정완료!!! [현서]확인 완료-->
                     {% else %}
                     {% endif %}
             </nav>

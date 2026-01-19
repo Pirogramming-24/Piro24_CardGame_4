@@ -14,7 +14,7 @@ urlpatterns = [
     #path('login/google/', views.google_login, name='google'),
     #path('login/kakao/', views.kakao_login, name='kakao'),
     # [채령 추가] 아래 3줄이 없어서 에러가 난 겁니다! 꼭 넣어주세요.
-    path('login/naver/', views.naver_login, name='naver'),
-    path('login/google/', views.google_login, name='google'),
-    path('login/kakao/', views.kakao_login, name='kakao'),
-]
+    # path('login/naver/', views.naver_login, name='naver'),
+    # path('login/google/', views.google_login, name='google'),
+    # path('login/kakao/', views.kakao_login, name='kakao'),
+]   
