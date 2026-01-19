@@ -29,3 +29,21 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('users:login')
+
+# users/views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import CustomUserCreationForm # 1. 새로 만든 폼 임포트
+
+def signup(request):
+    if request.method == 'POST':
+        # 2. 기본 폼 대신 커스텀 폼 사용
+        form = CustomUserCreationForm(request.POST) 
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('games:main') # 3. 가입 후 메인으로 이동
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'users/signup.html', {'form': form})

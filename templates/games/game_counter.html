@@ -1,3 +1,28 @@
 <!-- 반격 -->
 
 {% extends 'base.html' %}
+{% block content %}
+<div class="game-container">
+    <div class="counter-header">
+        <h2>반격할 카드를 선택하세요</h2>
+        <p>{{ game.attacker.username }}님이 공격을 시도했습니다!</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card-wrapper">
+            {% for card in random_cards %}
+            <label class="card-label">
+                <input type="radio" name="selected_card" value="{{ card }}" required>
+                <div class="card-box">{{ card }}</div>
+            </label>
+            {% endfor %}
+        </div>
+
+        <div class="button-wrapper" style="text-align: center; margin-top: 30px;">
+            <button type="submit" class="btn-attack">Counter!</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% extends 'base.html' %}

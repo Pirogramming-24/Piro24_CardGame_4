@@ -10,7 +10,10 @@ urlpatterns = [
     # [cite_start]path('list/', views.game_list_view, name='game_list'), # 게임 목록
     # [cite_start]path('ranking/', views.ranking_view, name='ranking'),  # 랭킹 페이지
     # [cite_start]path('attack/', views.attack_view, name='attack'),     # 공격하기(게임 생성)
-    # path('ranking/', views.ranking_list, name='ranking'), # 랭킹 페이지 주소 설정 [cite: 80]
-    # 반격하기 처리 주소 (게임 ID를 넘겨받아야 함)
-    # path('counter/<int:game_id>/', views.counter_attack, name='counter_attack'),
+    # 1. 공격하기 페이지 (게임 생성)
+    # 127.0.0.1:8000/attack/ 주소로 접속 가능
+    path('attack/', views.attack_view, name='game_attack'), 
+    # 2. 반격하기 페이지 (게임 ID 필요) [cite: 8]
+    # 127.0.0.1:8000/counter/1/ 과 같은 주소로 접속 가능
+    path('counter/<int:game_id>/', views.counter_attack, name='game_counter'),
 ]
