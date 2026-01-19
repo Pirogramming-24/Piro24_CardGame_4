@@ -41,6 +41,7 @@ def login_view(request):
 # 3. 로그아웃
 def logout_view(request):
     logout(request)
+    # 로그아웃 후 다시 로그인 페이지로 이동
     return redirect('users:login')
 
 def ranking_list(request):
@@ -60,9 +61,3 @@ def ranking_list(request):
             'user': user,
             'percent': percent,
         })
-
-    return render(
-        request,
-        'games/ranking.html',
-        {'ranking_data': ranking_data}
-    )

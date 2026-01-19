@@ -152,21 +152,45 @@ def counter_attack(request, game_id):
         
         return redirect('games:game_detail', pk=game.id)
 
-# [랭킹 페이지]
+# [게임 상세 페이지] : 결과 화면
+@login_required
+def game_detail_view(request, pk):
+    game = get_object_or_404(Game, pk=pk)
+    return render(request, 'games/game_detail.html', {'game': game})
+
+# [전체 목록] : 나의 전적 리스트 (Q객체 사용 최적화)
+@login_required
+def game_list(request):
+    user = request.user
+    # 내가 공격자이거나 수비자인 모든 게임 조회 (최신순)
+    games = Game.objects.filter(
+        Q(attacker=user) | Q(defender=user)
+    ).order_by('-id')
+
+    return render(request, 'games/game_list.html', {'games': games})
+
 def ranking_list(request):
     User = get_user_model()
     users = User.objects.all().order_by('-points')
 
-    # 1등 점수 (그래프 비율 계산용)
-    max_point = users[0].points if users.exists() else 0
+    if not users.exists():
+        return render(request, 'games/ranking.html', {'ranking_data': []})
+
+    max_point = users.first().points
+    min_point = users.last().points
+
+    # 모든 점수가 같은 경우 (0으로 나누기 방지)
+    range_point = max_point - min_point
 
     ranking_data = []
     for idx, user in enumerate(users, start=1):
-        # 0으로 나누기 방지
-        percent = (user.points / max_point * 100) if max_point > 0 else 0
+        if range_point > 0:
+            percent = (user.points - min_point) / range_point * 100
+        else:
+            percent = 100  # 전부 같은 점수면 동일 높이
 
         ranking_data.append({
-            'rank': idx,         
+            'rank': idx,
             'user': user,
             'percent': percent,
         })
@@ -176,28 +200,6 @@ def ranking_list(request):
         'games/ranking.html',
         {'ranking_data': ranking_data}
     )
-
-# [게임 상세 페이지] : 결과 화면
-def game_detail_view(request, pk):
-    game = get_object_or_404(Game, pk=pk)
-    return render(request, 'games/game_detail.html', {'game': game})
-
-# [유저 관련] : 로그인/회원가입
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(request, username=username, password=password)
-        if user:
-            login(request, user)
-            # 로그인 성공 시 게임 리스트(메인)로 이동
-            return redirect('games:main')
-            
-    return render(request, "users/login.html")
-
-def signup_view(request):
-    return render(request, "users/signup.html")
 
 # [게임 취소]
 @login_required
