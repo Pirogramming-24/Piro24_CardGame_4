@@ -9,6 +9,7 @@
         <div class="userInfo-hs">{{ user.nickname|default:user.username }}님이 로그인 중..</div> <!--username 들어가도록 변경해야 함-->
         <div class="main-buttons-hs">
             <a href="{% url 'games:game_attack' %}" class="startbtn-hs">Start!</a>
+            <a href="{% url 'games:game_list' %}" class="gamelistbtn-hs">전적 보기</a>
         </div>
     </div>
 </div>

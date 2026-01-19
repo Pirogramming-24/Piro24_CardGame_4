@@ -23,6 +23,12 @@
 }
 .main-logined-body-hs .main-box .main-buttons-hs{display: flex; flex-wrap: nowrap;}
 .main-logined-body-hs .main-box .main-buttons-hs .startbtn-hs{
+    background-color: #7C7C7C; 
+    width: 80px; height: 30px; border-radius: 5px; 
+    text-align: center; color: white;
+    display: flex; align-items: center; justify-content: center; padding: 3px; margin: 5px;
+}
+.main-logined-body-hs .main-box .main-buttons-hs .gamelistbtn-hs{
     background-color: #935555; 
     width: 80px; height: 30px; border-radius: 5px; 
     text-align: center; color: white;
