@@ -15,11 +15,8 @@ def get_random_cards():
 
 # [메인 페이지] : 비로그인 유저용 대문
 def main_view(request):
-    # 로그인 한 사람이면 -> Start 화면으로 토스
     if request.user.is_authenticated:
         return redirect('games:main_logined')
-    
-    # 로그인 안 한 사람이면 -> 대문 페이지
     return render(request, 'games/main.html')
 
 # [로그인 후 메인] : Start 버튼 있는 화면
@@ -36,13 +33,13 @@ def attack_view(request):
         random_cards = get_random_cards()
         other_users = User.objects.exclude(id=request.user.id)
         
-        # [핵심] 나에게 온 대결 요청이 있는지 확인 (모달용)
+        # [모달용] 나에게 온 대결 요청 확인
         pending_game = Game.objects.filter(defender=request.user, result='진행중').first()
         
         context = {
             'random_cards': random_cards, 
             'other_users': other_users,
-            'pending_game': pending_game  # [수정완료] 중복된 줄 삭제함
+            'pending_game': pending_game
         }
         return render(request, 'games/game_attack.html', context)
     
@@ -50,14 +47,12 @@ def attack_view(request):
         defender_id = request.POST.get('defender') 
         card_picked = request.POST.get('selected_card') 
 
-        # 유효성 검사
         if not defender_id or not card_picked:
              return redirect('games:game_attack')
 
         try:
             defender = User.objects.get(id=defender_id)
             
-            # 게임 DB 생성
             game = Game.objects.create(
                 attacker=request.user,
                 defender=defender,
@@ -65,8 +60,8 @@ def attack_view(request):
                 result='진행중'
             )
             
-            # 공격자는 대기 화면(loading)으로 이동
-            return render(request, 'games/game_loading.html', {'game_id': game.id})
+            # [수정됨] loading 화면 대신 바로 detail 페이지로 이동!
+            return redirect('games:game_detail', pk=game.id)
             
         except User.DoesNotExist:
             return redirect('games:game_attack')
@@ -133,20 +128,33 @@ def counter_attack(request, game_id):
         return redirect('games:game_detail', pk=game.id)
 
 # [게임 상세 페이지] : 결과 화면
+@login_required
 def game_detail_view(request, pk):
     game = get_object_or_404(Game, pk=pk)
     return render(request, 'games/game_detail.html', {'game': game})
+
+# [전체 목록] : 나의 전적 리스트 (이게 없으면 리스트 버튼 에러남)
+@login_required
+def game_list(request):
+    games = Game.objects.filter(attacker=request.user) | Game.objects.filter(defender=request.user)
+    games = games.order_by('-id')
+    return render(request, 'games/game_list.html', {'games': games})
 
 # [랭킹 페이지]
 def ranking_list(request):
     User = get_user_model()
     users = User.objects.all().order_by('-points')
 
-    max_point = users[0].points if users.exists() else 0
+    if not users.exists():
+        return render(request, 'games/ranking.html', {'ranking_data': []})
+
+    # 1등 점수 기준 (그래프 비율용)
+    max_point = users.first().points 
 
     ranking_data = []
     for idx, user in enumerate(users, start=1):
-        percent = (user.points / max_point * 100) if max_point > 0 else 0
+        # 점수가 양수일 때만 그래프 비율 계산 (음수나 0이면 0%)
+        percent = (user.points / max_point * 100) if max_point > 0 and user.points > 0 else 0
 
         ranking_data.append({
             'rank': idx,         
@@ -175,43 +183,3 @@ def check_game_status(request, game_id):
         return JsonResponse({'finished': True})
     else:
         return JsonResponse({'finished': False})
-    
-@login_required
-def attack_view(request):
-    User = get_user_model()
-    
-    if request.method == 'GET':
-        # ... (기존 GET 로직 동일) ...
-        random_cards = get_random_cards()
-        other_users = User.objects.exclude(id=request.user.id)
-        pending_game = Game.objects.filter(defender=request.user, result='진행중').first()
-        
-        context = {
-            'random_cards': random_cards, 
-            'other_users': other_users,
-            'pending_game': pending_game
-        }
-        return render(request, 'games/game_attack.html', context)
-    
-    elif request.method == 'POST':
-        defender_id = request.POST.get('defender') 
-        card_picked = request.POST.get('selected_card') 
-
-        if not defender_id or not card_picked:
-             return redirect('games:game_attack')
-
-        try:
-            defender = User.objects.get(id=defender_id)
-            
-            game = Game.objects.create(
-                attacker=request.user,
-                defender=defender,
-                attacker_card=int(card_picked),
-                result='진행중'
-            )
-            
-            # [수정됨] loading 화면 대신 바로 detail 페이지로 이동!
-            return redirect('games:game_detail', pk=game.id)
-            
-        except User.DoesNotExist:
-            return redirect('games:game_attack')
