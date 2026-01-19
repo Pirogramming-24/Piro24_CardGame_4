@@ -16,9 +16,10 @@ urlpatterns = [
     path('detail/<int:pk>/', views.game_detail_view, name='game_detail'),
     path('ranking/', views.ranking_list, name='ranking'),
     
+    # [핵심] 전적 리스트 경로 (이게 빠져서 에러가 난 것입니다!)
+    path('list/', views.game_list, name='game_list'),
+    
     # 3. 기타 기능 (취소, 상태확인)
     path('cancel/<int:game_id>/', views.cancel_duel, name='cancel_duel'),
-    
-    # [수정] 오타 수정 (check _status -> check_status)
     path('check_status/<int:game_id>/', views.check_game_status, name='check_game_status'),
 ]

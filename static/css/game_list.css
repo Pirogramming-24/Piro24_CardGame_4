@@ -18,13 +18,16 @@
     box-sizing: border-box;
 }
 
-/* 2. 헤더 타이틀 */
+/* 2. 헤더 타이틀 (폰트 변경함) */
 .list-title {
-    font-family: 'NeoDunggeunmo', cursive; /* 픽셀 폰트 */
+    /* [수정] 픽셀 폰트 제거하고 일반적인 고딕체로 변경 */
+    font-family: 'Noto Sans KR', sans-serif; 
+    font-weight: 700; /* 굵게 */
+    
     font-size: 32px;
     color: #000;
     margin: 0 0 20px 0;
-    text-align: left; /* 피그마 왼쪽 정렬 */
+    text-align: left; 
 }
 
 .user-info-bar {
@@ -61,7 +64,7 @@
     align-items: center;
     padding: 20px 10px;
     border-bottom: 1px solid #ccc; /* 아이템 사이 얇은 줄 */
-    font-family: 'NeoDunggeunmo', sans-serif;
+    font-family: 'NeoDunggeunmo', sans-serif; /* 리스트 내부는 픽셀 폰트 유지 (원하시면 여기도 Noto Sans KR로 바꾸세요) */
 }
 
 /* (1) 대결 정보 (user : user) */

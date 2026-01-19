@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse 
+from django.db.models import Q
 from .models import Game
 
 # 1. 유틸리티 함수
@@ -60,7 +61,7 @@ def attack_view(request):
                 result='진행중'
             )
             
-            # [수정됨] loading 화면 대신 바로 detail 페이지로 이동!
+            # 공격 성공 시 상세 페이지로 이동
             return redirect('games:game_detail', pk=game.id)
             
         except User.DoesNotExist:
@@ -94,7 +95,7 @@ def counter_attack(request, game_id):
         selected_card = int(selected_card)
         game.defender_card = selected_card
         
-        # --- 승패 판정 로직 ---
+        # --- 승패 판정 로직 (오류 수정됨) ---
         if game.attacker_card == selected_card:
             game.winner = None 
             game.result = '무승부'
@@ -103,23 +104,27 @@ def counter_attack(request, game_id):
             criterion = random.choice([0, 1])
             game.win_criterion = criterion
             
-            att_card = game.attacker_card
-            def_card = game.defender_card
+            att = game.attacker_card
+            def_c = game.defender_card
             
-            is_attacker_win = (criterion == 0 and att_card > def_card) or \
-                              (criterion == 1 and att_card < def_card)
+            # 승리 조건 판단
+            if criterion == 0:
+                is_attacker_win = att > def_c
+            else:
+                is_attacker_win = att < def_c
             
             if is_attacker_win:
                 game.winner = game.attacker
-                game.result = '승리'
-                game.attacker.points += att_card
-                game.defender.points -= def_card
+                game.result = '승리' # 공격자 기준
+                game.attacker.points += att
+                game.defender.points -= def_c
             else:
                 game.winner = game.defender
-                game.result = '패배'
-                game.defender.points += def_card
-                game.attacker.points -= att_card
+                game.result = '패배' # 공격자 기준
+                game.defender.points += def_c
+                game.attacker.points -= att
             
+            # 점수 변동 저장
             game.attacker.save()
             game.defender.save()
             
@@ -133,11 +138,15 @@ def game_detail_view(request, pk):
     game = get_object_or_404(Game, pk=pk)
     return render(request, 'games/game_detail.html', {'game': game})
 
-# [전체 목록] : 나의 전적 리스트 (이게 없으면 리스트 버튼 에러남)
+# [전체 목록] : 나의 전적 리스트 (Q객체 사용 최적화)
 @login_required
 def game_list(request):
-    games = Game.objects.filter(attacker=request.user) | Game.objects.filter(defender=request.user)
-    games = games.order_by('-id')
+    user = request.user
+    # 내가 공격자이거나 수비자인 모든 게임 조회 (최신순)
+    games = Game.objects.filter(
+        Q(attacker=user) | Q(defender=user)
+    ).order_by('-id')
+
     return render(request, 'games/game_list.html', {'games': games})
 
 # [랭킹 페이지]
@@ -148,12 +157,12 @@ def ranking_list(request):
     if not users.exists():
         return render(request, 'games/ranking.html', {'ranking_data': []})
 
-    # 1등 점수 기준 (그래프 비율용)
+    # 1등 점수 (그래프 비율용)
     max_point = users.first().points 
 
     ranking_data = []
     for idx, user in enumerate(users, start=1):
-        # 점수가 양수일 때만 그래프 비율 계산 (음수나 0이면 0%)
+        # 점수가 양수일 때만 그래프 비율 계산
         percent = (user.points / max_point * 100) if max_point > 0 and user.points > 0 else 0
 
         ranking_data.append({
@@ -164,16 +173,17 @@ def ranking_list(request):
 
     return render(request, 'games/ranking.html', {'ranking_data': ranking_data})
 
-# [대결 취소]
+# [게임 취소]
 @login_required
 def cancel_duel(request, game_id):
     game = get_object_or_404(Game, id=game_id)
     
+    # 본인이 공격자이고, 아직 '진행중'일 때만 삭제 가능
     if game.attacker == request.user and game.result == '진행중':
-        game.delete() 
+        game.delete()
     
-    # 취소 후 Start 화면으로 복귀
-    return redirect('games:main_logined')
+    # 삭제 후엔 리스트로 돌아가는 게 자연스러움
+    return redirect('games:game_list')
 
 # [API] 상태 확인
 def check_game_status(request, game_id):
