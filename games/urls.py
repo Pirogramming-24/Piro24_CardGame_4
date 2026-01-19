@@ -19,4 +19,5 @@ urlpatterns = [
     
     # 4. API (상태 확인용)
     path('check_status/<int:game_id>/', views.check_game_status, name='check_game_status'),
+    path('cancel/<int:game_id>/', views.cancel_duel, name='cancel_duel'),
 ]

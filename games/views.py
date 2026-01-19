@@ -203,3 +203,14 @@ def login_view(request):
 
 def signup_view(request):
     return render(request, "users/signup.html")
+
+@login_required
+def cancel_duel(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+    
+    # 안전장치: 요청한 사람이 공격자가 맞는지, 아직 진행중인지 확인
+    if game.attacker == request.user and game.result == '진행중':
+        game.delete() # DB에서 게임 삭제
+    
+    # 메인 페이지로 복귀
+    return redirect('games:main')
