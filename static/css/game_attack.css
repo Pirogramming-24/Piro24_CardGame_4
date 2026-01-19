@@ -181,3 +181,70 @@
     box-shadow: 0 0 0 #5e3232;
     transform: translateY(4px);
 }
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border: 4px solid #ff4d4d;
+    animation: popUp 0.3s ease-out;
+}
+
+.modal-title {
+    color: #ff4d4d;
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-family: 'NeoDunggeunmo', sans-serif; /* 폰트 통일 */
+}
+
+.modal-text {
+    font-size: 18px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    font-family: 'NeoDunggeunmo', sans-serif;
+}
+
+.btn-counter-modal {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-block;
+    font-family: 'NeoDunggeunmo', sans-serif;
+}
+
+.btn-close-modal {
+    display: block;
+    margin-top: 15px;
+    color: #888;
+    text-decoration: underline;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'NeoDunggeunmo', sans-serif;
+}
+
+@keyframes popUp {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
