@@ -9,20 +9,24 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             
-            # [핵심] "ValueError: You have multiple authentication backends" 에러 방지 코드
-            # 소셜 로그인 기능이 추가되면 Django가 어떤 방식으로 로그인시킬지 혼란스러워하므로,
-            # "이 유저는 일반 DB(ModelBackend) 방식으로 로그인한다"고 명찰을 달아줍니다.
+            # [핵심] 소셜 로그인 충돌 방지 (일반 DB 로그인 명시)
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             
+            # 가입 후 자동 로그인
             login(request, user)
-            # 가입 성공 시 바로 게임 메인으로 이동
-            return redirect('games:main')
+            
+            # [수정] 가입 성공 시 'Start 버튼'이 있는 메인으로 이동
+            return redirect('games:main_logined') 
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/signup.html', {'form': form})
 
 # 2. 로그인
 def login_view(request):
+    # 이미 로그인한 상태라면 바로 Start 화면으로 보냄
+    if request.user.is_authenticated:
+        return redirect('games:main_logined')
+
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -31,13 +35,12 @@ def login_view(request):
         
         if user is not None:
             login(request, user)
-            # 로그인 성공 시 게임 메인으로 이동
-            return redirect('games:main')
+            # [수정] 로그인 성공 시 'Start 버튼'이 있는 메인으로 이동
+            return redirect('games:main_logined')
         else:
-            # 로그인 실패 시 (비밀번호 틀림 등) 다시 로그인 페이지로
-            # 필요하다면 에러 메시지 context 추가 가능
+            # 로그인 실패 시 에러 메시지 표시
             return render(request, "users/login.html", {'error': '아이디 또는 비밀번호가 올바르지 않습니다.'})
-        
+            
     return render(request, "users/login.html")
 
 # 3. 로그아웃
