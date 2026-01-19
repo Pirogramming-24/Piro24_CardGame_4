@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from .models import Game
+from django.contrib.auth import authenticate, login
 
 # 1. 유틸리티 함수
 def get_random_cards():
@@ -139,8 +140,18 @@ def counter_attack(request, game_id):
         game.save()
         return redirect('game_detail', game_id=game.id) # 반격 후 상세 페이지로 
     
+
 def login_view(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('/games/loginedmain/')
     return render(request, "users/login.html")
+
 
 def signup_view(request):
     return render(request, "users/signup.html")
