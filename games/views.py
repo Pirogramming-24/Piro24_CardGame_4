@@ -54,6 +54,7 @@ def attack_view(request):
     if request.method == 'GET':
         random_cards = get_random_cards()
         other_users = User.objects.exclude(id=request.user.id)
+        pending_game = Game.objects.filter(defender=request.user, result='진행중').first()
         context = {
             'random_cards': random_cards, 
             'other_users': other_users
@@ -215,3 +216,24 @@ def cancel_duel(request, game_id):
     
     # 메인 페이지로 복귀
     return redirect('games:main')
+
+@login_required
+def game_list(request):
+    user = request.user
+
+    # 내가 참여한 모든 게임
+    games = (
+        Game.objects.filter(attacker=user) |
+        Game.objects.filter(defender=user)
+    ).order_by('-created_at')
+
+    # 나에게 온 진행중 게임 (수비자 입장)
+    pending_game = Game.objects.filter(
+        defender=user,
+        result=Game.STATUS_PROGRESS
+    ).first()
+
+    return render(request, 'games/game_list.html', {
+        'games': games,
+        'pending_game': pending_game,
+    })

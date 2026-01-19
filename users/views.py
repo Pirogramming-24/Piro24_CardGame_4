@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # [수정] 우리가 만든 폼을 가져옵니다!
 from .forms import CustomUserCreationForm
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 
 # 1. 회원가입
 def signup(request):
@@ -40,3 +42,27 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('users:login')
+
+def ranking_list(request):
+    User = get_user_model()
+    users = User.objects.all().order_by('-points')
+
+    # 1등 점수 (그래프 비율 계산용)
+    max_point = users[0].points if users.exists() else 0
+
+    ranking_data = []
+    for idx, user in enumerate(users, start=1):
+        # 0으로 나누기 방지
+        percent = (user.points / max_point * 100) if max_point > 0 else 0
+
+        ranking_data.append({
+            'rank': idx,         
+            'user': user,
+            'percent': percent,
+        })
+
+    return render(
+        request,
+        'games/ranking.html',
+        {'ranking_data': ranking_data}
+    )
