@@ -1,20 +1,23 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-# [수정] 우리가 만든 폼을 가져옵니다!
 from .forms import CustomUserCreationForm
 
 # 1. 회원가입
-def signup(request):
+def signup_view(request):
     if request.method == 'POST':
-        # [수정] UserCreationForm -> CustomUserCreationForm으로 변경
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            
+            # [핵심] "ValueError: You have multiple authentication backends" 에러 방지 코드
+            # 소셜 로그인 기능이 추가되면 Django가 어떤 방식으로 로그인시킬지 혼란스러워하므로,
+            # "이 유저는 일반 DB(ModelBackend) 방식으로 로그인한다"고 명찰을 달아줍니다.
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            
             login(request, user)
-            return redirect('users:login') 
+            # 가입 성공 시 바로 게임 메인으로 이동
+            return redirect('games:main')
     else:
-        # [수정] 여기도 변경
         form = CustomUserCreationForm()
     return render(request, 'users/signup.html', {'form': form})
 
@@ -25,43 +28,20 @@ def login_view(request):
         password = request.POST.get('password')
 
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
             login(request, user)
-            # [핵심] users 앱에서 -> games 앱의 main으로 이동
-            return redirect('games:main') 
+            # 로그인 성공 시 게임 메인으로 이동
+            return redirect('games:main')
+        else:
+            # 로그인 실패 시 (비밀번호 틀림 등) 다시 로그인 페이지로
+            # 필요하다면 에러 메시지 context 추가 가능
+            return render(request, "users/login.html", {'error': '아이디 또는 비밀번호가 올바르지 않습니다.'})
         
     return render(request, "users/login.html")
-
-# [채령 추가] 소셜 로그인 임시 함수 (에러 방지용 껍데기) 이거 런서버가 계속 안되서 아무 내용없는 함수 넣었어요
-#소셜로그인 구현 하실때 지우고 하시거나 해주세요
-# def naver_login(request):
-#     return redirect('users:login') 
-
-# def google_login(request):
-#     return redirect('users:login')
-
-# def kakao_login(request):
-#     return redirect('users:login')
 
 # 3. 로그아웃
 def logout_view(request):
     logout(request)
+    # 로그아웃 후 다시 로그인 페이지로 이동
     return redirect('users:login')
-
-# users/views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
-from .forms import CustomUserCreationForm # 1. 새로 만든 폼 임포트
-
-def signup(request):
-    if request.method == 'POST':
-        # 2. 기본 폼 대신 커스텀 폼 사용
-        form = CustomUserCreationForm(request.POST) 
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('games:main') # 3. 가입 후 메인으로 이동
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'users/signup.html', {'form': form})
