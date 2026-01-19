@@ -6,7 +6,7 @@
 <div class="main-logined-body-hs">
     <div class="main-box">
         <div class="game-title-hs"><p>Piro Card Match</p></div>
-        <div class="userInfo-hs">000님이 로그인 중..</div> <!--username 들어가도록 변경해야 함-->
+        <div class="userInfo-hs">{{ user.nickname|default:user.username }}님이 로그인 중..</div> <!--username 들어가도록 변경해야 함-->
         <div class="main-buttons-hs">
             <a href="{% url 'games:game_attack' %}" class="startbtn-hs">Start!</a>
         </div>
