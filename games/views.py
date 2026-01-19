@@ -175,3 +175,43 @@ def check_game_status(request, game_id):
         return JsonResponse({'finished': True})
     else:
         return JsonResponse({'finished': False})
+    
+@login_required
+def attack_view(request):
+    User = get_user_model()
+    
+    if request.method == 'GET':
+        # ... (기존 GET 로직 동일) ...
+        random_cards = get_random_cards()
+        other_users = User.objects.exclude(id=request.user.id)
+        pending_game = Game.objects.filter(defender=request.user, result='진행중').first()
+        
+        context = {
+            'random_cards': random_cards, 
+            'other_users': other_users,
+            'pending_game': pending_game
+        }
+        return render(request, 'games/game_attack.html', context)
+    
+    elif request.method == 'POST':
+        defender_id = request.POST.get('defender') 
+        card_picked = request.POST.get('selected_card') 
+
+        if not defender_id or not card_picked:
+             return redirect('games:game_attack')
+
+        try:
+            defender = User.objects.get(id=defender_id)
+            
+            game = Game.objects.create(
+                attacker=request.user,
+                defender=defender,
+                attacker_card=int(card_picked),
+                result='진행중'
+            )
+            
+            # [수정됨] loading 화면 대신 바로 detail 페이지로 이동!
+            return redirect('games:game_detail', pk=game.id)
+            
+        except User.DoesNotExist:
+            return redirect('games:game_attack')
