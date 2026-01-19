@@ -18,6 +18,8 @@
 
 .main-logined-body-hs .main-box .game-title-hs{
     color: #935555; font-size: 60px; font-weight: 900; font-family: 'NeoDunggeunmo', cursive; font-weight: 900;
+    white-space: nowrap;
+    text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
 }
 .main-logined-body-hs .main-box .main-buttons-hs{display: flex; flex-wrap: nowrap;}
 .main-logined-body-hs .main-box .main-buttons-hs .startbtn-hs{

@@ -32,6 +32,7 @@
     text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
     text-align: center;
     line-height: 1.2;
+    white-space: nowrap;
 }
 
 
