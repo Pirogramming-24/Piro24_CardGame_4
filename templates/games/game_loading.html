@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="loading-container" style="text-align: center; margin-top: 100px;">
+    <img src="{% static 'images/hat_icon.png' %}" alt="loading" width="100">
+    
+    <div class="loading-text" style="font-family: 'NeoDunggeunmo'; font-size: 30px; margin: 20px 0; color: #935555;">
+        DUEL STARTING...
+    </div>
+    
+    <p id="status-msg" style="font-family: 'NeoDunggeunmo'; color:#666;">
+        상대방의 반격을 기다리고 있습니다...
+    </p>
+</div>
+
+<script>
+    const gameId = "{{ game_id|default:'' }}";
+    
+    // [디버깅] 게임 ID가 제대로 들어왔는지 확인
+    console.log("현재 대기 중인 게임 ID:", gameId);
+
+    if (gameId) {
+        // 1초마다 서버에 상태 확인
+        const checkInterval = setInterval(function() {
+            
+            // [수정] 캐시 방지를 위해 headers 추가
+            fetch(`/games/check_status/${gameId}/`, {
+                headers: { 'Cache-Control': 'no-cache' } 
+            }) 
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("서버 응답:", data); // [디버깅] 콘솔에서 확인 가능
+
+                if (data.finished) {
+                    clearInterval(checkInterval);
+                    document.getElementById('status-msg').innerText = "승부가 났습니다! 이동합니다...";
+                    
+                    // [수정] 이동할 주소를 명확히 지정
+                    window.location.href = `/games/detail/${gameId}/`; 
+                }
+            })
+            .catch(error => console.error('Error:', error));
+                
+        }, 1000); 
+
+    } else {
+        // 수비자 입장 (혹은 이미 끝난 경우)
+        const nextUrl = "{{ next_url|default:'' }}";
+        if (nextUrl) {
+            window.location.href = nextUrl;
+        }
+    }
+</script>
+{% endblock %}

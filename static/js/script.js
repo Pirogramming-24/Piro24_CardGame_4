@@ -1,9 +1,9 @@
-/* static/js/script.js */
+/* static/js/script.js - 최종 정리본 */
 
 document.addEventListener("DOMContentLoaded", function() {
     
-    // 1. 요소 가져오기 (회원가입 폼에 있는 모든 인풋)
-    const nameInput = document.getElementById("id_nickname"); // 이름(first_name)
+    // 1. 요소 가져오기
+    const nameInput = document.getElementById("id_nickname"); // 이름
     const idInput = document.getElementById("id_username");   // 아이디
     const pwInput = document.getElementById("id_password");   // 비번
     const pwCheckInput = document.getElementById("id_password_check"); // 비번 확인
@@ -11,22 +11,19 @@ document.addEventListener("DOMContentLoaded", function() {
     const feedbackDiv = document.getElementById("password-feedback");
     const submitBtn = document.querySelector(".btn-submit");
 
-    // [중요 방어 코드] 
-    // 이 스크립트는 base.html에 있어서 로그인 페이지에서도 실행됩니다.
-    // 하지만 로그인 페이지에는 '비밀번호 확인(pwCheckInput)' 칸이 없죠.
-    // 따라서, 회원가입 페이지가 아니면(요소가 없으면) 이 아래 코드를 실행하지 않고 멈춥니다.
-    if (!pwCheckInput || !nameInput) {
+    // [중요 방어 코드]
+    // 회원가입 페이지가 아니면(필수 입력창이 없으면) 스크립트 실행 중단
+    // (로그인 페이지 등에서 에러 발생하는 것 방지)
+    if (!nameInput || !idInput || !pwInput || !pwCheckInput || !submitBtn) {
         return; 
     }
 
-    // 2. 초기 상태: 버튼 비활성화 (시작하자마자 잠금)
-    if (submitBtn) {
-        disableButton();
-    }
+    // 2. 초기 상태: 버튼 비활성화 (페이지 로드 시 무조건 잠금)
+    disableButton();
 
     // 3. 통합 검사 함수 (이름, 아이디, 비번 모두 검사)
     function validateSignup() {
-        // 값 가져오기 (공백 제거)
+        // 값 가져오기 (양옆 공백 제거)
         const nameValue = nameInput.value.trim();
         const idValue = idInput.value.trim();
         const pwValue = pwInput.value.trim();
@@ -34,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         let isPwMatch = false;
 
-        // 1) 비밀번호 일치 여부 확인 로직
+        // 1) 비밀번호 일치 여부 확인
         if (pwCheckValue === "") {
             feedbackDiv.textContent = ""; // 비어있으면 메시지 숨김
             isPwMatch = false;
@@ -49,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // 2) 최종 버튼 활성화 조건
-        // 조건: 이름 입력됨 AND 아이디 입력됨 AND 비밀번호 일치함(isPwMatch가 true면 비번도 입력된 것)
+        // 이름 입력됨 AND 아이디 입력됨 AND 비밀번호 일치함
         if (nameValue.length > 0 && idValue.length > 0 && isPwMatch) {
             enableButton();
         } else {
@@ -57,27 +54,23 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // 버튼 활성화 함수
+    // [헬퍼 함수] 버튼 활성화
     function enableButton() {
-        if(submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = "1"; // 진하게
-            submitBtn.style.cursor = "pointer"; // 손가락 모양
-            submitBtn.style.backgroundColor = "#935555"; // 원래 갈색
-        }
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1"; 
+        submitBtn.style.cursor = "pointer"; 
+        submitBtn.style.backgroundColor = "#935555"; // 원래 버튼 색상
     }
 
-    // 버튼 비활성화 함수
+    // [헬퍼 함수] 버튼 비활성화
     function disableButton() {
-        if(submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = "0.5"; // 흐릿하게
-            submitBtn.style.cursor = "not-allowed"; // 금지 모양
-        }
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.5"; 
+        submitBtn.style.cursor = "not-allowed"; 
     }
 
     // 4. 이벤트 리스너 연결 
-    // 4개의 칸 중 하나라도 입력할 때마다 검사 함수 실행
+    // 입력창 4개 중 하나라도 입력할 때마다 검사 함수 실행
     nameInput.addEventListener("input", validateSignup);
     idInput.addEventListener("input", validateSignup);
     pwInput.addEventListener("input", validateSignup);
