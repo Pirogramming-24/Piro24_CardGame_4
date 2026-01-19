@@ -215,3 +215,7 @@ def cancel_duel(request, game_id):
     
     # 메인 페이지로 복귀
     return redirect('games:main')
+
+@login_required
+def main_logined_view(request):
+    return render(request, 'games/main_logined.html')
