@@ -42,7 +42,7 @@ def attack_view(request):
         context = {
             'random_cards': random_cards, 
             'other_users': other_users,
-            'pending_game': pending_game  # [수정] 이걸 넣어줘야 HTML에서 모달이 뜹니다!
+            'pending_game': pending_game  # [수정완료] 중복된 줄 삭제함
         }
         return render(request, 'games/game_attack.html', context)
     
