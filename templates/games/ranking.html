@@ -1,3 +1,15 @@
 <!-- 랭킹 -->
 
 {% extends 'base.html' %}
+
+{% block content %}
+<div class="ranking-body-hs">
+    <div class="float-bg-hs">
+        <div class="gameranking-title-hs"><p>게임 랭킹</p></div>
+        <div class="charbar-hs">000님이 로그인 중..</div> <!--안에 차트는 아직 구현 안 함-->
+        <div class="gamelist-btn-hs">
+            <a href="{% url 'games:game_list' %}" class="gamelist-btn-hs">전적 목록</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
