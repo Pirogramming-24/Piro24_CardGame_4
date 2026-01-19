@@ -1,3 +1,115 @@
 <!-- 상세 결과 -->
 
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}게임 상세 - Piro Card Match{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/game_detail.css' %}">
+
+<div class="main-container">
+    
+    {% if game.status == 'IN_PROGRESS' and user == game.defender %}
+    <div class="modal-overlay">
+        <div class="modal-window">
+            <p class="modal-text">
+                <span class="highlight">{{ game.attacker.first_name|default:game.attacker.username }}</span>님이<br>
+                대결을 요청하셨습니다.<br>
+                수락하시겠습니까? 🔫
+            </p>
+            <div class="modal-btn-area">
+                <a href="{% url 'games:counter' game.id %}" class="btn-modal btn-yes">예</a>
+                
+                <a href="{% url 'games:list' %}" class="btn-modal btn-no">아니요</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <div class="game-box">
+        
+        <div class="match-header">
+            <span class="player-name">{{ game.attacker.first_name|default:game.attacker.username }}</span>
+            <span class="vs-text">VS</span>
+            <span class="player-name">{{ game.defender.first_name|default:game.defender.username }}</span>
+        </div>
+
+        <div class="divider"></div>
+
+        {% if game.status == 'FINISHED' %}
+            <div class="game-content">
+                <p class="rule-text">
+                    숫자가 <span class="rule-highlight">
+                        {% if game.rule == 'HIGHER' %}큰{% else %}작은{% endif %}
+                    </span> 사람이 이깁니다
+                </p>
+
+                <div class="score-board">
+                    <div class="score-row">
+                        <span class="p-name">{{ game.attacker.first_name|default:game.attacker.username }}:</span>
+                        <span class="p-card-num">{{ game.attacker_card }}</span>
+                    </div>
+                    <div class="score-row">
+                        <span class="p-name">{{ game.defender.first_name|default:game.defender.username }}:</span>
+                        <span class="p-card-num">{{ game.defender_card }}</span>
+                    </div>
+                </div>
+
+                <div class="divider-thin"></div>
+
+                <div class="result-display">
+                    결과: 
+                    <span class="result-text">
+                        {% if game.winner == user %}
+                            승리! 🎉
+                        {% elif game.winner == None %}
+                            무승부 🤝
+                        {% else %}
+                            패배.. 💀
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="divider-thin"></div>
+
+                <div class="point-display">
+                    점수: 
+                    <span class="point-text">
+                        {% if game.winner == user %}
+                            +{{ game.attacker_card }} {% elif game.winner == None %}
+                            0
+                        {% else %}
+                            -{{ game.attacker_card }} 
+                        {% endif %}
+                    </span>
+                </div>
+
+                <a href="{% url 'games:list' %}" class="btn-action btn-gray">전체 목록</a>
+            </div>
+
+        {% elif game.status == 'IN_PROGRESS' and user == game.attacker %}
+            <div class="game-content">
+                <p class="waiting-text">진행 중..</p>
+                
+                <p class="my-card-info">
+                    나: <span class="card-num">{{ game.attacker_card }}</span>
+                </p>
+
+                <div class="action-area">
+                    <form action="{% url 'games:delete' game.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-action btn-red" onclick="return confirm('정말 게임을 취소하시겠습니까?');">게임 취소</button>
+                    </form>
+                    
+                    <a href="{% url 'games:list' %}" class="btn-action btn-gray">전체 목록</a>
+                </div>
+            </div>
+            
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
