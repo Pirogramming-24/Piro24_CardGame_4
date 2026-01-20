@@ -1,0 +1,37 @@
+.main-box {
+    background-color: #FFF1B9; /* 팀원분이 원한 진한 노란색 유지 */
+    width: 100%;
+    max-width: 600px; /* 반응형을 위해 max-width 사용 */
+    height: 400px;
+    
+    border-radius: 15px; /* 모서리 둥글게 (auth-box와 통일감) */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* 입체감 그림자 추가 */
+    
+    /* 박스 내부 내용 중앙 정렬 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px; /* 제목과 버튼 사이 간격 */
+    padding: 10px 30px;
+}
+
+.main-logined-body-hs .main-box .game-title-hs{
+    color: #935555; font-size: 60px; font-weight: 900; font-family: 'NeoDunggeunmo', cursive; font-weight: 900;
+    white-space: nowrap;
+    text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+.main-logined-body-hs .main-box .main-buttons-hs{display: flex; flex-wrap: nowrap;}
+.main-logined-body-hs .main-box .main-buttons-hs .startbtn-hs{
+    background-color: #7C7C7C; 
+    width: 80px; height: 30px; border-radius: 5px; 
+    text-align: center; color: white;
+    display: flex; align-items: center; justify-content: center; padding: 3px; margin: 5px;
+}
+.main-logined-body-hs .main-box .main-buttons-hs .gamelistbtn-hs{
+    background-color: #935555; 
+    width: 80px; height: 30px; border-radius: 5px; 
+    text-align: center; color: white;
+    display: flex; align-items: center; justify-content: center; padding: 3px; margin: 5px;
+}
+.main-logined-body-hs .main-box .main-buttons-hs .startbtn-hs:hover{box-shadow: 5px;}

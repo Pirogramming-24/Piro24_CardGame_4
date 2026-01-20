@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="loading-container" style="text-align: center; margin-top: 100px;">
+    <img src="{% static 'images/hat_icon.png' %}" alt="loading" width="100">
+    
+    <div class="loading-text" style="font-family: 'NeoDunggeunmo'; font-size: 30px; margin: 20px 0; color: #935555;">
+        DUEL STARTING...
+    </div>
+    
+    <p id="status-msg" style="font-family: 'NeoDunggeunmo'; color:#666; margin-bottom: 30px;">
+        상대방의 반격을 기다리고 있습니다...
+    </p>
+
+    {% if game_id %}
+    <div>
+        <a href="{% url 'games:cancel_duel' game_id %}" class="btn-cancel">
+            대결 취소하기 🚫
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .btn-cancel {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #ccc; /* 회색 배경 */
+        color: #555;
+        font-family: 'NeoDunggeunmo';
+        font-size: 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: 2px solid #aaa;
+    }
+    .btn-cancel:hover {
+        background-color: #ff6b6b; /* 마우스 올리면 빨간색으로 경고 */
+        color: white;
+        border-color: #d63031;
+    }
+</style>
+
+<script>
+    const gameId = "{{ game_id|default:'' }}";
+    
+    if (gameId) {
+        // 1초마다 서버에 상태 확인
+        const checkInterval = setInterval(function() {
+            
+            fetch(`/games/check_status/${gameId}/`, {
+                headers: { 'Cache-Control': 'no-cache' } 
+            }) 
+            .then(response => {
+                if (!response.ok) {
+                    // 404 에러(게임이 취소됨)가 뜨면 인터벌 멈춤
+                    if(response.status === 404) clearInterval(checkInterval);
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.finished) {
+                    clearInterval(checkInterval);
+                    document.getElementById('status-msg').innerText = "승부가 났습니다! 결과 페이지로 이동합니다.";
+                    
+                    // 버튼 숨기기 (이동 중 취소 방지)
+                    const cancelBtn = document.querySelector('.btn-cancel');
+                    if(cancelBtn) cancelBtn.style.display = 'none';
+
+                    setTimeout(() => {
+                        window.location.href = `/games/detail/${gameId}/`;
+                    }, 500); 
+                }
+            })
+            .catch(error => console.error('Error:', error));
+                
+        }, 1000); 
+
+    } else {
+        // 수비자 입장 등
+        const nextUrl = "{{ next_url|default:'' }}";
+        if (nextUrl) {
+            window.location.href = nextUrl;
+        }
+    }
+</script>
+{% endblock %}

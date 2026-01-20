@@ -1,0 +1,118 @@
+<!-- 회원가입 페이지 -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}회원가입 - Piro Card Match{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+
+<div class="main-container">
+    <div class="auth-box signup-box">
+        <h1 class="auth-title">Sign up</h1>
+        
+        <form method="POST" action="" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="signup-inner-box">
+                
+                <div class="input-group">
+                    <label for="id_nickname" class="sr-only">Name</label>
+                    <input type="text" name="nickname" id="id_nickname" placeholder="USER NAME">
+                    </div>
+
+                <div class="input-group">
+                    <label for="id_username" class="sr-only">ID</label>
+                    <input type="text" name="username" id="id_username" placeholder="ID">
+                </div>
+
+                <div class="input-group">
+                    <label for="id_password" class="sr-only">PW</label>
+                    <input type="password" name="password1" id="id_password" placeholder="PW">
+                </div>
+                
+                <div class="input-group">
+                    <label for="id_password_check" class="sr-only">PW Check</label>
+                    <input type="password" name="password2" id="id_password_check" placeholder="PW 확인">
+                </div>
+
+                <div id="password-feedback" style="font-size: 14px; margin-top: 5px; min-height: 20px;"></div>
+
+            </div>
+
+            <div class="btn-area align-right">
+                <button type="submit" class="btn-submit">회원가입</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // 1. 요소 찾기
+        const nameInput = document.getElementById("id_nickname"); // Name
+        const idInput = document.getElementById("id_username");   // ID
+        const pwInput = document.getElementById("id_password");   // PW
+        const pwCheckInput = document.getElementById("id_password_check"); // PW 확인
+        
+        const feedbackDiv = document.getElementById("password-feedback");
+        const submitBtn = document.querySelector(".btn-submit");
+
+        // 2. 초기 상태: 버튼 비활성화 (흐릿하게 잠금)
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = "0.5"; 
+            submitBtn.style.cursor = "not-allowed";
+        }
+
+        // 3. 통합 검사 함수
+        function validateSignup() {
+            // 값 가져오기 (공백 제거)
+            const nameValue = nameInput.value.trim();
+            const idValue = idInput.value.trim();
+            const pwValue = pwInput.value.trim();
+            const pwCheckValue = pwCheckInput.value.trim();
+
+            let isPwMatch = false;
+
+            // 1) 비밀번호 일치 확인
+            if (pwCheckValue === "") {
+                feedbackDiv.textContent = ""; 
+                isPwMatch = false;
+            } else if (pwValue === pwCheckValue) {
+                feedbackDiv.textContent = "비밀번호가 일치합니다. ✅";
+                feedbackDiv.style.color = "#4CAF50"; // 초록색
+                isPwMatch = true;
+            } else {
+                feedbackDiv.textContent = "비밀번호가 일치하지 않습니다. ❌";
+                feedbackDiv.style.color = "#FF5252"; // 빨간색
+                isPwMatch = false;
+            }
+
+            // 2) 최종 버튼 활성화 조건 (모두 입력됨 AND 비번 일치)
+            if (nameValue.length > 0 && idValue.length > 0 && isPwMatch) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1"; // 진하게
+                submitBtn.style.cursor = "pointer"; // 손가락
+                submitBtn.style.backgroundColor = "#935555"; // 원래 색 복구
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = "0.5"; // 흐리게
+                submitBtn.style.cursor = "not-allowed"; // 금지
+            }
+        }
+
+        // 4. 이벤트 연결 (입력할 때마다 검사)
+        if (nameInput && idInput && pwInput && pwCheckInput) {
+            nameInput.addEventListener("input", validateSignup);
+            idInput.addEventListener("input", validateSignup);
+            pwInput.addEventListener("input", validateSignup);
+            pwCheckInput.addEventListener("input", validateSignup);
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}게임 전적 - Piro Card Match{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/game_list.css' %}">
+
+<div class="main-container">
+    <div class="list-box">
+        
+        <h1 class="list-title">게임 전적 리스트</h1>
+        
+        <div class="user-info-bar">
+            현재 플레이어: <span class="highlight-name">{{ user.first_name|default:user.username }}</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="game-list-container">
+            {% for game in games %}
+            <div class="game-item">
+                
+                <div class="match-info">
+                    <span class="p-name">{{ game.attacker.first_name|default:game.attacker.username }}</span>
+                    <span class="vs">:</span>
+                    <span class="p-name">{{ game.defender.first_name|default:game.defender.username }}</span>
+                </div>
+
+                <div class="status-area">
+                    {% if game.result != '진행중' %}
+                        
+                        {% if game.winner == user %}
+                            <span class="badge badge-win">승리</span>
+                        {% elif game.winner == None %}
+                            <span class="badge badge-draw">무승부</span>
+                        {% else %}
+                            <span class="badge badge-lose">패배</span>
+                        {% endif %}
+
+                    {% else %}
+                        {% if user == game.attacker %}
+                            <span class="status-text">진행 중..</span>
+                            <form action="{% url 'games:cancel_duel' game.id %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-cancel-small" onclick="return confirm('게임을 취소하시겠습니까?');">취소하기</button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'games:counter_attack' game.id %}" class="btn-counter">반격하기!</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="action-area">
+                    <a href="{% url 'games:game_detail' game.id %}" class="btn-info">게임 정보 보기</a>
+                </div>
+
+            </div>
+            {% empty %}
+                <div class="empty-msg">아직 진행된 게임이 없습니다. 🤠</div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

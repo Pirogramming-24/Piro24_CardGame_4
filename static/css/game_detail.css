@@ -1,0 +1,154 @@
+/* static/css/game_detail.css */
+
+/* 1. 게임 박스 (기본 틀) */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.game-box {
+    background-color: #FFF1B9; /* 연한 노랑/베이지 */
+    width: 400px;
+    padding: 40px 30px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    
+    /* [수정된 부분] 기존 NeoDunggeunmo 대신 일반 고딕 폰트 적용 */
+    font-family: 'Noto Sans KR', sans-serif; 
+}
+
+/* 2. 대결 정보 헤더 (User VS User) */
+.match-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.player-name {
+    font-size: 22px;
+    color: #3878A8; /* 파란색 */
+    font-weight: 500; /* 약간 두껍게 */
+}
+
+.vs-text {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 구분선 */
+.divider {
+    width: 100%;
+    height: 2px;
+    background-color: #ddd; /* 조금 더 연하게 */
+    margin-bottom: 30px;
+}
+
+.divider-thin {
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+    margin: 20px 0;
+}
+
+/* 3. 텍스트 스타일 */
+.game-content {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 진행중 화면 스타일 */
+.waiting-text {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+.my-card-info {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 50px;
+}
+
+/* 결과 화면 스타일 */
+.rule-text {
+    font-size: 18px;
+    color: #555;
+}
+.rule-highlight {
+    font-weight: bold;
+    color: #333;
+}
+
+.score-board {
+    width: 100%;
+}
+.score-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 18px;
+    margin: 8px 0; /* 간격 약간 조정 */
+    color: #444;
+}
+.p-card-num {
+    font-weight: bold;
+    color: #222;
+}
+
+.result-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.result-text, .point-text {
+    font-size: 20px;
+    color: #333;
+}
+.result-val, .point-val {
+    font-weight: bold;
+}
+
+/* 4. 버튼 스타일 */
+.action-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.btn-action {
+    display: inline-block;
+    padding: 12px 0; /* 버튼 높이 약간 증가 */
+    width: 130px; /* 버튼 너비 약간 증가 */
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    /* 버튼은 이미 Noto Sans KR이었지만, 상속받도록 제거해도 무방 */
+    transition: background-color 0.2s;
+}
+
+.btn-red { background-color: #D9534F; }
+.btn-red:hover { background-color: #c9302c; }
+
+.btn-gray { background-color: #777; } /* 회색 약간 진하게 */
+.btn-gray:hover { background-color: #666; }

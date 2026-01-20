@@ -13,9 +13,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-default-key')
 DEBUG = env('DEBUG', default=True)
 ALLOWED_HOSTS = ['*']
-
-
-
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000', ]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'games',
-
+    'users',
     # [소셜 로그인 및 폼 관련]
     'django.contrib.sites',
     'allauth',
@@ -68,19 +68,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # 도커 환경이라는 확실한 신호가 있을 때만 MySQL 사용
-if os.environ.get('DOCKER_MODE') == 'True':
+if os.environ.get('DB_HOST'):
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': env('DB_NAME'),
-            'USER': env('DB_USER'),
-            'PASSWORD': env('DB_PASSWORD'),
-            'HOST': env('DB_HOST'),
-            'PORT': env('DB_PORT'),
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
         }
     }
 else:
-    # 로컬(내 컴퓨터)에서는 무조건 SQLite3 사용
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -107,8 +106,55 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # 소셜 로그인 설정
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/'  # 로그인 후 이동할 페이지
+LOGIN_REDIRECT_URL = '/games/'  # 로그인 후 이동할 페이지
 LOGOUT_REDIRECT_URL = '/' # 로그아웃 후 이동할 페이지
 ACCOUNT_EMAIL_VERIFICATION = "none" # 이메일 인증 건너뛰기
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'users.User'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+
+
+
+    
+
+# True일 경우: 구글 인증 후 바로 가입 완료 (편리함)
+# False일 경우: 구글 인증 후 추가 정보(닉네임 등) 입력 페이지로 이동
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# True일 경우: "정말 로그인하시겠습니까?"라는 중간 확인 페이지를 생략하고 바로 구글창을 띄움
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# config/settings.py
+
+SOCIALACCOUNT_PROVIDERS = {
+    'naver': {
+        'APP': {
+            'client_id': env('NAVER_CLIENT_ID'),
+            'secret': env('NAVER_CLIENT_SECRET'),
+            'key': ''
+        }
+    },
+    'kakao': {
+        'APP': {
+            'client_id': env('KAKAO_REST_API_KEY'),
+            'secret': env('KAKAO_CLIENT_SECRET', default=''),
+            'key': ''
+        },
+    },
+    'google': {
+        'APP': {
+            'client_id': env('GOOGLE_CLIENT_ID'),
+            'secret': env('GOOGLE_CLIENT_SECRET'),
+            'key': ''
+        }
+    }
+}
+
+

@@ -1,0 +1,80 @@
+.nav-bar {
+    background-color: #935555; 
+    
+    height: 70px;
+    width: 100%;
+    
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+.nav-container {
+    width: 100%;
+    max-width: 1200px; 
+    padding: 0 20px;
+    
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.game-title {
+    font-family: 'NeoDunggeunmo', cursive; 
+    color: #935555; 
+    font-size: 58px; 
+    font-weight: 900; 
+    text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+
+.main-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+
+.btn-main {
+    width: 120px;    
+    height: 45px;
+    border-radius: 8px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+
+.btn-main:active {
+    transform: scale(0.95);
+}
+
+
+.btn-login {
+    background-color: #935555;
+}
+.btn-login:hover {
+    background-color: #7a4444;
+}
+
+
+.btn-signup {
+    background-color: #7C7C7C;
+}
+.btn-signup:hover {
+    background-color: #5a5a5a;
+}

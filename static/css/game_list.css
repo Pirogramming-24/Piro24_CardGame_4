@@ -1,0 +1,186 @@
+/* static/css/game_list.css */
+
+/* 1. 리스트 박스 (메인 컨테이너) */
+.list-box {
+    background-color: #FFF1B9; /* 베이지색 */
+    width: 800px; /* 리스트라 좀 넓게 */
+    max-width: 95%;
+    min-height: 600px;
+    
+    padding: 40px 50px;
+    border-radius: 15px;
+    
+    display: flex;
+    flex-direction: column;
+    /* 내용을 왼쪽 정렬 기반으로 하되 제목 등은 디자인에 따름 */
+    
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-sizing: border-box;
+}
+
+/* 2. 헤더 타이틀 (폰트 변경함) */
+.list-title {
+    /* [수정] 픽셀 폰트 제거하고 일반적인 고딕체로 변경 */
+    font-family: 'Noto Sans KR', sans-serif; 
+    font-weight: 700; /* 굵게 */
+    
+    font-size: 32px;
+    color: #000;
+    margin: 0 0 20px 0;
+    text-align: left; 
+}
+
+.user-info-bar {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.highlight-name {
+    font-weight: bold;
+    color: #000;
+}
+
+/* 구분선 (가로 줄) */
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: #333; /* 진한 회색 */
+    margin-bottom: 0;
+}
+
+/* 3. 게임 리스트 아이템 */
+.game-list-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-item {
+    display: flex;
+    justify-content: space-between; /* 양 끝 정렬 */
+    align-items: center;
+    padding: 20px 10px;
+    border-bottom: 1px solid #ccc; /* 아이템 사이 얇은 줄 */
+    font-family: 'NeoDunggeunmo', sans-serif; /* 리스트 내부는 픽셀 폰트 유지 (원하시면 여기도 Noto Sans KR로 바꾸세요) */
+}
+
+/* (1) 대결 정보 (user : user) */
+.match-info {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+    width: 30%; /* 공간 확보 */
+    text-align: left;
+}
+
+.vs {
+    margin: 0 5px;
+}
+
+/* (2) 상태 표시 영역 (중앙) */
+.status-area {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 배지 스타일 (승리, 패배, 무승부) */
+.badge {
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+}
+
+.badge-win {
+    background-color: #FAE100; /* 승리: 노란색 */
+    border: 1px solid #E0C800;
+}
+
+.badge-lose {
+    background-color: #888; /* 패배: 회색 */
+    color: white;
+}
+
+.badge-draw {
+    background-color: #2FB14A; /* 무승부: 초록색 */
+    color: white;
+}
+
+/* 진행 중 텍스트 & 취소 버튼 */
+.status-text {
+    font-size: 16px;
+    color: #555;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.btn-cancel-small {
+    background-color: #D9534F; /* 빨간색 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.btn-cancel-small:hover { opacity: 0.8; }
+
+/* 반격하기 버튼 (파란색) */
+.btn-counter {
+    background-color: #3878A8; /* 파란색 */
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Noto Sans KR', sans-serif;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+.btn-counter:hover { background-color: #2b618a; }
+
+/* (3) 정보 보기 버튼 (우측) */
+.action-area {
+    width: 30%;
+    text-align: right;
+}
+
+.btn-info {
+    background-color: #FFFFFF;
+    border: 1px solid #333;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.2s;
+}
+
+.btn-info:hover {
+    background-color: #eee;
+}
+
+/* 리스트 없을 때 */
+.empty-msg {
+    text-align: center;
+    padding: 50px;
+    color: #777;
+    font-size: 18px;
+}
+
+/* 모바일 반응형 */
+@media screen and (max-width: 600px) {
+    .list-box { padding: 20px; width: 95%; }
+    .game-item { flex-direction: column; gap: 15px; text-align: center; }
+    .match-info, .status-area, .action-area { width: 100%; text-align: center; }
+}

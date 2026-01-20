@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/game_detail.css' %}">
+
+<div class="main-container">
+    
+    <div class="game-box">
+        
+        <div class="match-header">
+            <span class="player-name left">{{ game.attacker.nickname }}</span>
+            <span class="vs-text">VS</span>
+            <span class="player-name right">{{ game.defender.nickname }}</span>
+        </div>
+        
+        <div class="divider"></div>
+
+        {% if game.result == '진행중' %}
+            <div class="game-content">
+                <p class="waiting-text">진행 중..</p>
+                
+                <p class="my-card-info">
+                    나: <span class="card-num">{{ game.attacker_card }}</span>
+                </p>
+
+                <div class="action-area">
+                    {% if user == game.attacker %}
+                    <a href="{% url 'games:cancel_duel' game.id %}" class="btn-action btn-red">
+                        게임 취소
+                    </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'games:main_logined' %}" class="btn-action btn-gray">전체 목록</a>
+                </div>
+            </div>
+
+            <script>
+                const gameId = "{{ game.id }}";
+                setInterval(function() {
+                    fetch(`/games/check_status/${gameId}/`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.finished) {
+                            // 게임이 끝나면 페이지 새로고침 -> 결과 화면(CASE 2)이 뜸
+                            window.location.reload();
+                        }
+                    });
+                }, 1000);
+            </script>
+
+        {% else %}
+            <div class="game-content">
+                
+                <p class="rule-text">
+                    숫자가 <span class="rule-highlight">
+                        {% if game.win_criterion == 0 %}큰{% else %}작은{% endif %}
+                    </span> 사람이 이깁니다
+                </p>
+                
+                <div class="divider-thin"></div>
+
+                <div class="score-board">
+                    <div class="score-row">
+                        <span class="p-name">{{ game.attacker.nickname }}:</span>
+                        <span class="p-card-num">{{ game.attacker_card }}</span>
+                    </div>
+                    <div class="score-row">
+                        <span class="p-name">{{ game.defender.nickname }}:</span>
+                        <span class="p-card-num">{{ game.defender_card }}</span>
+                    </div>
+                </div>
+
+                <div class="divider-thin"></div>
+
+                <div class="result-area">
+                    <p class="result-text">
+                        결과: 
+                        <span class="result-val">
+                            {% if game.result == '무승부' %}
+                                무승부
+                            {% elif game.winner == user %}
+                                승리
+                            {% else %}
+                                패배
+                            {% endif %}
+                        </span>
+                    </p>
+                    
+                    <p class="point-text">
+                        점수: 
+                        <span class="point-val">
+                             {% if game.winner == user %}
+                                {{ game.attacker_card }}
+                            {% elif game.winner == None %}
+                                0
+                            {% else %}
+                                -{{ game.attacker_card }}
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+
+                <div class="action-area">
+                    <a href="{% url 'games:main_logined' %}" class="btn-action btn-gray">전체 목록</a>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

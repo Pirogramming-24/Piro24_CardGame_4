@@ -1,0 +1,250 @@
+/* game_attack.css - Fixed Version */
+
+/* 1. 메인 컨테이너 (베이지색 박스) */
+/* HTML의 class="frame attack-main-frame"과 이름을 맞춤 */
+.attack-main-frame {
+    background-color: #FFF1B9; /* 연노랑 배경 */
+    width: 950px;
+    height: 580px;
+    
+    /* 화면 중앙 정렬 및 내부 요소 배치 */
+    display: flex;
+    flex-direction: column;
+    padding: 30px 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    
+    /* base.html 등의 다른 스타일 간섭 방지 */
+    box-sizing: border-box; 
+    margin: 0 auto; /* 좌우 중앙 정렬 */
+}
+
+/* 제목 스타일 */
+.auth-title {
+    font-family: 'NeoDunggeunmo', sans-serif;
+    font-size: 40px;
+    color: #935555;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 폼 영역 */
+.attack-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 좌우 분할 컨테이너 */
+.split-container {
+    display: flex;
+    flex: 1;
+    gap: 40px; /* 좌우 간격 */
+    height: 100%;
+}
+
+/* 중앙 수직선 */
+.v-divider {
+    width: 2px;
+    background-color: rgba(147, 85, 85, 0.4);
+    margin: 10px 0;
+}
+
+.section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-label {
+    font-family: 'NeoDunggeunmo', sans-serif;
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* 2. 카드 디자인 (Grid) */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3열 배치 */
+    gap: 15px;
+    justify-items: center; /* 카드 가운데 정렬 */
+}
+
+/* 라디오 버튼 숨기기 (중요: 이것 때문에 레이아웃이 틀어짐) */
+.card-item input[type="radio"] {
+    /* 아예 없애지 않고(display: none X), 투명하게(opacity: 0) 만듭니다 */
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    cursor: pointer;
+}
+
+.card-item {
+    cursor: pointer;
+}
+
+.card-box {
+    width: 90px;
+    height: 130px;
+    background-color: #fff;
+    border: 2px solid #935555;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.card-val {
+    font-family: 'NeoDunggeunmo', sans-serif;
+    font-size: 32px;
+    color: #333;
+    z-index: 2; /* 모자보다 글자가 위에 오도록 */
+}
+
+/* 평소에는 모자 숨김 */
+.selection-hat {
+    display: none;
+    width: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 정중앙 배치 */
+    opacity: 0.2; /* 배경처럼 은은하게 */
+    z-index: 1;
+}
+
+/* [핵심] 선택된 카드 스타일 */
+/* 라디오 버튼이 checked 상태일 때, 바로 뒤의 .card-box 스타일 변경 */
+.card-item input[type="radio"]:checked + .card-box {
+    background-color: #935555; /* 갈색 배경 */
+    transform: translateY(-5px); /* 살짝 위로 뜸 */
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.card-item input[type="radio"]:checked + .card-box .card-val {
+    color: #fff; /* 글자색 흰색으로 */
+}
+
+.card-item input[type="radio"]:checked + .card-box .selection-hat {
+    display: block; /* 모자 보이기 */
+    opacity: 1;     /* 선명하게 */
+    /* 원본 디자인처럼 텍스트 위나 아래에 배치하려면 위치 조정 필요.
+       현재는 중앙에 겹치도록 설정함. 원하시는 대로 top/bottom 조정 가능 */
+    top: -20px;     /* 카드 위쪽으로 삐져나오게 하려면 이렇게 */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 3. 오른쪽 (상대 선택 & 버튼) */
+.right-area {
+    justify-content: space-between; /* 위아래로 요소 분산 */
+}
+
+.pixel-select {
+    width: 100%;
+    height: 50px;
+    font-family: 'NeoDunggeunmo', sans-serif;
+    font-size: 16px;
+    border: 2px solid #935555;
+    border-radius: 5px;
+    padding: 0 10px;
+    outline: none;
+    background: #fff;
+}
+
+.attack-btn-box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    padding-bottom: 20px;
+}
+
+.btn-submit {
+    background-color: #935555;
+    color: white;
+    font-family: 'NeoDunggeunmo', sans-serif;
+    font-size: 24px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #5e3232; /* 입체감 */
+    transition: all 0.1s;
+}
+
+.btn-submit:active {
+    box-shadow: 0 0 0 #5e3232;
+    transform: translateY(4px);
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border: 4px solid #ff4d4d;
+    animation: popUp 0.3s ease-out;
+}
+
+.modal-title {
+    color: #ff4d4d;
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-family: 'NeoDunggeunmo', sans-serif; /* 폰트 통일 */
+}
+
+.modal-text {
+    font-size: 18px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    font-family: 'NeoDunggeunmo', sans-serif;
+}
+
+.btn-counter-modal {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-block;
+    font-family: 'NeoDunggeunmo', sans-serif;
+}
+
+.btn-close-modal {
+    display: block;
+    margin-top: 15px;
+    color: #888;
+    text-decoration: underline;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'NeoDunggeunmo', sans-serif;
+}
+
+@keyframes popUp {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}

@@ -1,0 +1,115 @@
+.ranking-body-hs{width: 900px;}
+.ranking-body-hs .main-box{
+    background-color: #FFF1B9;
+    width: 100%;
+    max-width: 900px; /* 반응형을 위해 max-width 사용 */
+    height: 500px;
+    padding: 10px;
+    
+    border-radius: 15px; /* 모서리 둥글게 (auth-box와 통일감) */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* 입체감 그림자 추가 */
+    
+    /* 박스 내부 내용 중앙 정렬 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px; /* 제목과 버튼 사이 간격 */
+}
+.ranking-body-hs .main-box .gameranking-title-hs{font-size: 40px;}
+.ranking-body-hs .main-box .chartbar-hs{}
+.ranking-body-hs .main-box .gamelist-btn-hs{}
+
+.ranking-chart {
+    width: 100%;
+    height: 300px;             
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;  
+    gap: 24px;
+    padding: 20px;
+    /* background-color: pink; */
+}
+
+.chart-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 60px;
+    /* background-color: aqua; */
+}
+
+
+.rank-label {
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.rank-label {
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.bar-vertical-container {
+    position: relative;
+    width: 100%;
+    height: 200px;          
+    display: flex;
+    align-items: flex-end;  
+    justify-content: center;
+    /* background-color: bisque; */
+}
+
+
+.bar-vertical {
+    position: relative;
+    width: 100%;
+    min-height: 2px;       
+    transition: height 0.4s ease;
+    background: #F5B181;
+    justify-content: center;
+    text-align: center;
+}
+.score-above {
+    position: absolute;
+    bottom: calc(100% + 6px); /* 막대 꼭대기 + 여백 */
+    font-size: 10px; color: red;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.bar-vertical.gold {
+    background: linear-gradient(to top, gold, orange);
+}
+.bar-vertical.silver {
+    background: linear-gradient(to top, silver, gray);
+}
+.bar-vertical.bronze {
+    background: linear-gradient(to top, peru, sienna);
+}
+.user-label {
+    margin-top: 6px;
+    font-size: 12px;
+    text-align: center;
+
+    height: 28px;              /* ⭐ 고정 */
+    display: flex;
+    align-items: center;       /* 수직 중앙 */
+    justify-content: center;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;       /* 한 줄로 */
+}
+
+
+
+.gamelist-btn-hs{
+    background-color: #935555; border-radius: 5px; padding: 5px;
+    color: white;
+}
+.gamelist-btn-hs:hover{
+    background-color: #7a4444;
+}
